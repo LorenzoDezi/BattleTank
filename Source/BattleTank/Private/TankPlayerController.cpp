@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#include "Engine/World.h"
 #include "TankPlayerController.h"
+#include "Engine/World.h"
 
 ATank* ATankPlayerController::GetControlledTank() const {
 	return Cast<ATank>(GetPawn());
@@ -20,6 +20,7 @@ void ATankPlayerController::BeginPlay()
 }
 
 void ATankPlayerController::Tick(float Deltaseconds) {
+	Super::Tick(Deltaseconds);
 	if (!GetControlledTank()) return;
 	AimAtCrosshair();
 }
@@ -28,7 +29,7 @@ void ATankPlayerController::AimAtCrosshair() {
 
 	FVector HitLocation;
 	if (GetCrosshairLocation(HitLocation)) {
-		UE_LOG(LogTemp, Warning, TEXT("Crosshair hit location: %s"), *HitLocation.ToString());
+		GetControlledTank()->AimAt(HitLocation);
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Can't get crosshair hit location!"));

@@ -30,6 +30,19 @@ void ATankAIController::BeginPlay()
 	}
 }
 
+void ATankAIController::Tick(float Deltaseconds)
+{
+	Super::Tick(Deltaseconds);
+	if (!GetControlledTank() || !GetPlayerTank()) return;
+	AimAtPlayer();
+}
+
+void ATankAIController::AimAtPlayer() {
+
+	FVector HitLocation = GetPlayerTank()->GetTransform().GetLocation();
+	GetControlledTank()->AimAt(HitLocation);
+}
+
 
 
 ATank * ATankAIController::GetPlayerTank() const
