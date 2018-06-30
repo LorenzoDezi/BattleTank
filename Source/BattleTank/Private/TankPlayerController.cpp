@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 #include "TankPlayerController.h"
 #include "Tank.h"
 #include "Engine/World.h"
@@ -34,6 +33,7 @@ void ATankPlayerController::AimAtCrosshair() {
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Can't get crosshair hit location!"));
+		GetControlledTank()->AimAt(GetControlledTank()->GetActorForwardVector());
 	}
 
 }

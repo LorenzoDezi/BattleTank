@@ -16,6 +16,17 @@ void ATank::SetBarrel(UTankBarrel * BarrelToSet)
 	AimingComponent->SetBarrel(BarrelToSet);
 }
 
+void ATank::SetTurret(UTankTurret * TurretToSet)
+{
+	AimingComponent->SetTurret(TurretToSet);
+}
+
+void ATank::Fire()
+{
+	//TODO
+	UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
+}
+
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {

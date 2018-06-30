@@ -17,6 +17,10 @@ public:
 	ATank();
 	UFUNCTION(BlueprintCallable, Category=Setup)
 	void SetBarrel(UTankBarrel* BarrelToSet);
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurret(UTankTurret* TurretToSet);
+	UFUNCTION(BlueprintCallable, Category = Actions)
+	void Fire();
 
 protected:
 	// Called when the game starts or when spawned
