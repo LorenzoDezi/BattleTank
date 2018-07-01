@@ -7,6 +7,7 @@
 #include "Tank.generated.h"
 
 class UTankAimingComponent;
+class UTankMovementComponent;
 class AProjectile;
 
 UCLASS()
@@ -27,7 +28,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components)
 	UTankAimingComponent* AimingComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Components)
+	UTankMovementComponent* MovementComponent;
 
 public:	
 	// Called to bind functionality to input
@@ -36,10 +40,15 @@ public:
 	void AimAt(FVector AimLocation);
 
 private:
-	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 100000; //Sensibile default value of 100000
-	UPROPERTY(EditAnywhere, Category = Firing)
-	TSubclassOf<AProjectile> Projectile = nullptr;
-	UTankBarrel* Barrel = nullptr;
 
+	UTankBarrel * Barrel = nullptr;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float LaunchSpeed = 100000; //Sensibile default value of 100000
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	TSubclassOf<AProjectile> Projectile = nullptr;
+	float LastFireTime = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float TimeToReloadInSeconds = 2.f;
 };

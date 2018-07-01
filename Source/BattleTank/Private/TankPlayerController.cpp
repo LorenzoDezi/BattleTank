@@ -2,40 +2,28 @@
 #include "Tank.h"
 #include "Engine/World.h"
 
-ATank* ATankPlayerController::GetControlledTank() const {
-	return Cast<ATank>(GetPawn());
-}
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	auto controlledTank = GetControlledTank();
-	if (!controlledTank) {
-		UE_LOG(LogTemp, Error, TEXT("Player not possessing any tank!"));
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("Player posseessing %s tank"), *controlledTank->GetName());
-	}
 }
 
 void ATankPlayerController::Tick(float Deltaseconds) {
 	Super::Tick(Deltaseconds);
-	if (!GetControlledTank()) return;
 	AimAtCrosshair();
 }
 
 void ATankPlayerController::AimAtCrosshair() {
 
 	FVector HitLocation;
+	auto ControlledTank = Cast<ATank>(GetPawn());
 	if (GetCrosshairLocation(HitLocation)) {
-		GetControlledTank()->AimAt(HitLocation);
+		ControlledTank -> AimAt(HitLocation);
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Can't get crosshair hit location!"));
-		GetControlledTank()->AimAt(GetControlledTank()->GetActorForwardVector());
+		Cast<ATank>(GetPawn())->AimAt(ControlledTank->GetActorForwardVector());
 	}
-
 }
 
 bool ATankPlayerController::GetCrosshairLocation(FVector & OutHitLocation) const

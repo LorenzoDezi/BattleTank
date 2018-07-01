@@ -5,6 +5,7 @@
 #include "Engine/StaticMeshSocket.h"
 #include "TankBarrel.h"
 #include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
 
 
 
@@ -13,6 +14,7 @@ ATank::ATank()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	AimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming_Component"));
+	MovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Movement_Component"));
 }
 
 void ATank::SetBarrel(UTankBarrel * BarrelToSet)
@@ -28,16 +30,16 @@ void ATank::SetTurret(UTankTurret * TurretToSet)
 
 void ATank::Fire()
 {
-	//TODO
-	UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
-	//Si poteva fare con getSocketLocation e getSocketRotation ... 
+	if (!Barrel) return;
+
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > TimeToReloadInSeconds;
 	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
 	FTransform transform;
-	if (projectileSocket->GetSocketTransform(transform, Barrel)) {
+	if (projectileSocket->GetSocketTransform(transform, Barrel) && isReloaded && Projectile) {
 		AProjectile* projectile = GetWorld()-> SpawnActor<AProjectile>(Projectile,transform);
 		projectile->Launch(LaunchSpeed);
+		LastFireTime = FPlatformTime::Seconds();
 	}
-
 }
 
 // Called when the game starts or when spawned

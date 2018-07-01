@@ -52,12 +52,6 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float LaunchSpeed)
 		AimLocation, LaunchSpeed, false, 0.f, 0.f, ESuggestProjVelocityTraceOption::DoNotTrace)) {
 		FVector AimDirection = OutVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
-		UE_LOG(LogTemp, Warning, TEXT("%f: %s component of tank %s aiming at %s, direction %s"),
-			Time,
-			*GetName(),
-			*(GetOwner()->GetName()),
-			*AimLocation.ToString(),
-			*AimDirection.ToString());
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("%f: %s didn't found aim solution."),
