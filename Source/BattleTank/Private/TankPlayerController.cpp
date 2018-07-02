@@ -13,6 +13,10 @@ void ATankPlayerController::Tick(float Deltaseconds) {
 	AimAtCrosshair();
 }
 
+ATank* ATankPlayerController::GetControlledTank() {
+	return Cast<ATank>(GetPawn());
+}
+
 void ATankPlayerController::AimAtCrosshair() {
 
 	FVector HitLocation;

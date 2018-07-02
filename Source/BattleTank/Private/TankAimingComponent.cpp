@@ -12,7 +12,7 @@
 UTankAimingComponent::UTankAimingComponent()
 {
 	//TODO: The aiming component should tick? Or not?
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 
@@ -30,16 +30,6 @@ void UTankAimingComponent::SetTurret(UTankTurret * TurretToSet)
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 void UTankAimingComponent::AimAt(FVector AimLocation, float LaunchSpeed)

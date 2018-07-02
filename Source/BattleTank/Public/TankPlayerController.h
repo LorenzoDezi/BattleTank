@@ -17,7 +17,10 @@ public:
 	void BeginPlay() override;
 	virtual void Tick(float Deltaseconds) override;
 
+
 private:
+	UFUNCTION(BlueprintPure, Category = Setup)
+	ATank * GetControlledTank();
 	void AimAtCrosshair();
 	bool GetCrosshairLocation(FVector& OutHitLocation) const;
 

@@ -21,5 +21,8 @@ public:
 	virtual void Tick(float Deltaseconds) override;
 private:
 	void AimAtPlayer();
+
+	UPROPERTY(EditDefaultsOnly, Category = Movement)
+	float AcceptanceRadius = 30.f;
 		
 };

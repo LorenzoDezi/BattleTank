@@ -22,10 +22,13 @@ void ATankAIController::AimAtPlayer() {
 
 	auto ControlledTank = Cast<ATank>(GetPawn());
 	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	FVector HitLocation = PlayerTank->GetTransform().GetLocation();
-	ControlledTank->AimAt(HitLocation);
-	//DEBUG
-	//ControlledTank->Fire();
+	if (PlayerTank && ControlledTank) {
+		MoveToActor(PlayerTank, AcceptanceRadius);
+		FVector HitLocation = PlayerTank->GetTransform().GetLocation();
+		ControlledTank->AimAt(HitLocation);
+	}
+	
+
 }
 
 
