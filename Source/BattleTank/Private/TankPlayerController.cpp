@@ -1,10 +1,14 @@
 #include "TankPlayerController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 #include "Engine/World.h"
 
 
 void ATankPlayerController::BeginPlay()
 {
+	auto aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (ensure(aimingComponent))
+		FoundAimingComponent(aimingComponent);
 	Super::BeginPlay();
 }
 
@@ -13,20 +17,19 @@ void ATankPlayerController::Tick(float Deltaseconds) {
 	AimAtCrosshair();
 }
 
-ATank* ATankPlayerController::GetControlledTank() {
-	return Cast<ATank>(GetPawn());
-}
-
 void ATankPlayerController::AimAtCrosshair() {
 
 	FVector HitLocation;
-	auto ControlledTank = Cast<ATank>(GetPawn());
+	auto ControlledTank = GetPawn();
+	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent))
+		return; 
 	if (GetCrosshairLocation(HitLocation)) {
-		ControlledTank -> AimAt(HitLocation);
+		AimingComponent->AimAt(HitLocation);
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Can't get crosshair hit location!"));
-		Cast<ATank>(GetPawn())->AimAt(ControlledTank->GetActorForwardVector());
+		AimingComponent->AimAt(ControlledTank->GetActorForwardVector());
 	}
 }
 

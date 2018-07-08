@@ -4,6 +4,7 @@
 #include "TankBarrel.h"
 #include "TankTurret.h"
 #include "Projectile.h"
+#include "Engine/StaticMeshSocket.h"
 #include "Engine/World.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
@@ -15,14 +16,9 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-
-void UTankAimingComponent::SetBarrel(UTankBarrel * BarrelToSet)
+void UTankAimingComponent::Initialise(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)
 {
 	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurret(UTankTurret * TurretToSet)
-{
 	Turret = TurretToSet;
 }
 
@@ -32,9 +28,9 @@ void UTankAimingComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UTankAimingComponent::AimAt(FVector AimLocation, float LaunchSpeed)
+void UTankAimingComponent::AimAt(FVector AimLocation)
 {
-	if (!Barrel) return;
+	if (!ensure(Barrel)) return;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	FVector OutVelocity;
 	float Time = GetWorld()->GetTimeSeconds();
@@ -47,15 +43,27 @@ void UTankAimingComponent::AimAt(FVector AimLocation, float LaunchSpeed)
 		UE_LOG(LogTemp, Warning, TEXT("%f: %s didn't found aim solution."),
 			Time,
 			*GetName());
+	}	
+}
 
+void UTankAimingComponent::Fire()
+{
+	if (!ensure(Barrel)) return;
+
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > TimeToReloadInSeconds;
+	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
+	FTransform transform;
+	if (projectileSocket->GetSocketTransform(transform, Barrel) && isReloaded && Projectile) {
+		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(Projectile, transform);
+		projectile->Launch(LaunchSpeed);
+		LastFireTime = FPlatformTime::Seconds();
 	}
-	
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector Direction)
 {
-	if (!Barrel) return;
-	if (!Turret) return;
+	if (!ensure(Barrel)) return;
+	if (!ensure(Turret)) return;
 
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotator = Direction.Rotation();
