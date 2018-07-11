@@ -35,6 +35,12 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void TickComponent
+	(
+		float DeltaTime,
+		enum ELevelTick TickType,
+		FActorComponentTickFunction * ThisTickFunction
+	) override;
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState FiringState = EFiringState::Aiming;
 
@@ -46,9 +52,10 @@ private:
 	float TimeToReloadInSeconds = 2.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> Projectile = nullptr;
-
+	//Used to check for the aiming FiringState
+	FVector AimDirection = FVector();
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
-	
+	//Used to redirect the barrel to the aim point	
 	void MoveBarrelTowards(FVector Direction);	
 };

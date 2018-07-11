@@ -21,6 +21,7 @@ void ATankPlayerController::AimAtCrosshair() {
 
 	FVector HitLocation;
 	auto ControlledTank = GetPawn();
+	if (!ControlledTank) return;
 	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent))
 		return; 

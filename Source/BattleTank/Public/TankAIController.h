@@ -21,6 +21,6 @@ private:
 	void AimAtPlayer();
 
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
-	float AcceptanceRadius = 30.f;
+	float AcceptanceRadius = 100.f;
 		
 };
