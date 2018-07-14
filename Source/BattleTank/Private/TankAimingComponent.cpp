@@ -63,10 +63,10 @@ void UTankAimingComponent::Fire()
 	if (!ensure(Barrel) || FiringState == EFiringState::OutOfAmmo) return;
 
 	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
+	if (!ensure(projectileSocket) || !ensure(Projectile)) return;
 	FTransform transform;
 	if (projectileSocket->GetSocketTransform(transform, Barrel) 
-		&& FiringState != EFiringState::Reloading 
-		&& ensure(Projectile)) {
+		&& FiringState != EFiringState::Reloading ) {
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(Projectile, transform);
 		projectile->Launch(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
