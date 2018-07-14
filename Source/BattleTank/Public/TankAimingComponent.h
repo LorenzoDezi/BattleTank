@@ -10,12 +10,16 @@ UENUM()
 enum class EFiringState : uint8 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFireDelegate);
+
 
 //Holds parameters for barrel's properties
 UCLASS( meta=(BlueprintSpawnableComponent) )
@@ -31,6 +35,9 @@ public:
 	void AimAt(FVector AimLocation);
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void Fire();
+	UFUNCTION(BlueprintPure, Category = "Info")
+	const int32 GetCurrentAmmo();
+	const EFiringState GetFiringState();
 
 protected:
 	// Called when the game starts
@@ -50,6 +57,13 @@ private:
 	float LastFireTime = 0.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float TimeToReloadInSeconds = 2.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 MaxAmmo = 10;
+	int32 CurrentAmmo;
+	UPROPERTY(BlueprintAssignable, Category = "Firing")
+	FFireDelegate OnFireDelegate;
+
+
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> Projectile = nullptr;
 	//Used to check for the aiming FiringState

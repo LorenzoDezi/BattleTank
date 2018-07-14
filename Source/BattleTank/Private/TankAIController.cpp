@@ -28,6 +28,9 @@ void ATankAIController::AimAtPlayer() {
 		auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 		if (!ensure(AimingComponent)) return;
 		AimingComponent->AimAt(HitLocation);
+		if (AimingComponent->GetFiringState() == EFiringState::Locked) {
+			AimingComponent->Fire();
+		}
 	}
 }
 

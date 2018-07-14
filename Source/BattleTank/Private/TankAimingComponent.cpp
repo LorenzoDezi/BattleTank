@@ -13,6 +13,7 @@
 UTankAimingComponent::UTankAimingComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	CurrentAmmo = MaxAmmo;
 }
 
 void UTankAimingComponent::Initialise(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)
@@ -29,7 +30,8 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
-	if (!ensure(Barrel)) return;
+	if (!ensure(Barrel) || FiringState == EFiringState::OutOfAmmo) return;
+
 	if ((FPlatformTime::Seconds() - LastFireTime) < TimeToReloadInSeconds)
 		FiringState = EFiringState::Reloading;
 	else if (!(Barrel->GetForwardVector().GetSafeNormal().Equals(AimDirection, 0.1f)))
@@ -58,7 +60,7 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 
 void UTankAimingComponent::Fire()
 {
-	if (!ensure(Barrel)) return;
+	if (!ensure(Barrel) || FiringState == EFiringState::OutOfAmmo) return;
 
 	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
 	FTransform transform;
@@ -68,7 +70,23 @@ void UTankAimingComponent::Fire()
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(Projectile, transform);
 		projectile->Launch(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
+		if (CurrentAmmo > 0)
+			CurrentAmmo--;
+		if(CurrentAmmo == 0)
+			FiringState = EFiringState::OutOfAmmo;
+		OnFireDelegate.Broadcast();
 	}
+}
+
+const int32 UTankAimingComponent::GetCurrentAmmo()
+{
+	UE_LOG(LogTemp, Warning, TEXT("CURRENT AMMO - %d"), CurrentAmmo);
+	return CurrentAmmo;
+}
+
+const EFiringState UTankAimingComponent::GetFiringState()
+{
+	return FiringState;
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector Direction)
@@ -77,9 +95,16 @@ void UTankAimingComponent::MoveBarrelTowards(FVector Direction)
 	if (!ensure(Turret)) return;
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotator = Direction.Rotation();
-	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
-	Barrel->Elevate(DeltaRotator.Pitch);
-	Turret->Rotate(DeltaRotator.Yaw);
+	auto DeltaRotator_1 = AimAsRotator - BarrelRotator;
+	if (FMath::Abs(DeltaRotator_1.Yaw) > 180) {
+		Turret->Rotate(-DeltaRotator_1.Yaw);
+	}
+	else {
+		Turret->Rotate(DeltaRotator_1.Yaw);
+
+	}
+
+	Barrel->Elevate(DeltaRotator_1.Pitch);
 }
 
