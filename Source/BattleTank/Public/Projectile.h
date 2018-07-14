@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class UParticleSystemComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -27,6 +28,10 @@ public:
 	void Launch(float Speed);
 private:
 	UProjectileMovementComponent * ProjectileMovComponent = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Setup")
+	UStaticMeshComponent * MeshComponent = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Setup")
+	UParticleSystemComponent * LaunchBlast = nullptr;
 	
 	
 };
