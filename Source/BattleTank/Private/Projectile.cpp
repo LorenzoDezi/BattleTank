@@ -8,35 +8,46 @@
 // Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+
+	//Setting mesh
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("Projectile Mesh Component"));
 	SetRootComponent(MeshComponent);
 	MeshComponent->SetNotifyRigidBodyCollision(true);
-	MeshComponent->SetVisibility(true);
-	LaunchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Projectile Particle Component"));
-	ProjectileMovComponent =  CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement Component"));
+	MeshComponent->SetVisibility(false);
+
+	//Setting particle systems
+	LaunchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
+	LaunchBlast->SetupAttachment(RootComponent);
+	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
+	ImpactBlast->SetupAttachment(RootComponent);
+	ImpactBlast->bAutoActivate = false;
+
+	//Setting movement component
+	ProjectileMovComponent = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement Component"));
 	ProjectileMovComponent->bAutoActivate = false;
+
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
+	MeshComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void AProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 void AProjectile::Launch(float Speed)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Inside launch, at %f"), Speed);
 	if (!ProjectileMovComponent) return;
+	UE_LOG(LogTemp, Warning, TEXT("After check projectile %s"), *ProjectileMovComponent->GetName());
 	ProjectileMovComponent->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovComponent->Activate();
+}
+
+void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	LaunchBlast->Deactivate();
+	ImpactBlast->Activate();
 }
 
