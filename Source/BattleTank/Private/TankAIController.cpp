@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAIController.h"
+#include "Tank.h"
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
 #include "Components/ActorComponent.h"
@@ -18,6 +19,13 @@ void ATankAIController::Tick(float Deltaseconds)
 	AimAtPlayer();
 }
 
+void ATankAIController::OnTankDeath() {
+	
+	UnPossess();
+	UE_LOG(LogTemp,Warning,TEXT("TANK DEATH"));
+}
+
+
 void ATankAIController::AimAtPlayer() {
 
 	auto ControlledTank = GetPawn();
@@ -32,6 +40,15 @@ void ATankAIController::AimAtPlayer() {
 			AimingComponent->Fire();
 		}
 	}
+}
+
+void ATankAIController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (!InPawn) return;
+	auto possessedTank = Cast<ATank>(InPawn);
+	if (!ensure(possessedTank)) return;
+	possessedTank->OnDeathDelegate.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
 }
 
 

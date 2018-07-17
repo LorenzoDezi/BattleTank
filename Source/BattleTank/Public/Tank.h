@@ -10,6 +10,8 @@ class UTankAimingComponent;
 class UTankMovementComponent;
 class AProjectile;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
+
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -24,8 +26,13 @@ public:
 		class AController * EventInstigator,
 		AActor * DamageCauser
 	) override;
+	UFUNCTION(BlueprintPure)
+	float GetHealthPercent() const;
+	FDeathDelegate OnDeathDelegate;
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Setup")
-	int32 Health = 100;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 MaxHealth = 100;
+	UPROPERTY(VisibleAnywhere, Category = "Stats")
+	int32 Health = MaxHealth;
 };

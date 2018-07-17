@@ -19,7 +19,9 @@ public:
 	virtual void Tick(float Deltaseconds) override;
 private:
 	void AimAtPlayer();
-
+	UFUNCTION()
+	void OnTankDeath();
+	virtual void SetPawn(APawn* InPawn) override;
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
 	float AcceptanceRadius = 100.f;
 		
