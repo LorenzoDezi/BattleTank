@@ -26,13 +26,14 @@ public:
 		class AController * EventInstigator,
 		AActor * DamageCauser
 	) override;
+	void BeginPlay() override;
+	void SetMaxHealth(int32 MaxHealth);
 	UFUNCTION(BlueprintPure)
 	float GetHealthPercent() const;
 	FDeathDelegate OnDeathDelegate;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 MaxHealth = 100;
-	UPROPERTY(VisibleAnywhere, Category = "Stats")
+	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 Health = MaxHealth;
 };

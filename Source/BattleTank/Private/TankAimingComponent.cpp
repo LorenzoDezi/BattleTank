@@ -13,7 +13,6 @@
 UTankAimingComponent::UTankAimingComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	CurrentAmmo = MaxAmmo;
 }
 
 void UTankAimingComponent::Initialise(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)
@@ -26,6 +25,9 @@ void UTankAimingComponent::Initialise(UTankBarrel * BarrelToSet, UTankTurret * T
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentAmmo = MaxAmmo;
+	if (CurrentAmmo == 0)
+		FiringState = EFiringState::OutOfAmmo;
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
@@ -74,6 +76,10 @@ void UTankAimingComponent::Fire()
 			CurrentAmmo--;
 		if(CurrentAmmo == 0)
 			FiringState = EFiringState::OutOfAmmo;
+
+		//The -1 default value stands for infinite ammo
+		if (CurrentAmmo == -1)
+			CurrentAmmo = 1;
 		OnFireDelegate.Broadcast();
 	}
 }
@@ -82,6 +88,12 @@ const int32 UTankAimingComponent::GetCurrentAmmo()
 {
 	UE_LOG(LogTemp, Warning, TEXT("CURRENT AMMO - %d"), CurrentAmmo);
 	return CurrentAmmo;
+}
+
+void UTankAimingComponent::SetMaxAmmo(int32 MaxAmmo)
+{
+	this->MaxAmmo = MaxAmmo;
+	CurrentAmmo = MaxAmmo;
 }
 
 const EFiringState UTankAimingComponent::GetFiringState()

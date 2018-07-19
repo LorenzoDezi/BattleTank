@@ -6,10 +6,14 @@
 
 void ATankPlayerController::BeginPlay()
 {
-	auto aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-	if (ensure(aimingComponent))
-		FoundAimingComponent(aimingComponent);
 	Super::BeginPlay();
+	auto possessedTank = Cast<ATank>(GetPawn());
+	if (!ensure(possessedTank)) return;
+	possessedTank->SetMaxHealth(MaxHealth);
+	auto aimingComponent = possessedTank->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(aimingComponent)) return;
+	FoundAimingComponent(aimingComponent);
+	aimingComponent->SetMaxAmmo(MaxAmmo);
 }
 
 void ATankPlayerController::Tick(float Deltaseconds) {
@@ -56,4 +60,19 @@ bool ATankPlayerController::GetCrosshairLocation(FVector & OutHitLocation) const
 	}
 	OutHitLocation = FVector(0);
 	return false;
+}
+
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (!InPawn) return;
+	auto possessedTank = Cast<ATank>(InPawn);
+	if (!ensure(possessedTank)) return;
+	possessedTank->OnDeathDelegate.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
+
+}
+
+void ATankPlayerController::OnTankDeath()
+{
+	StartSpectatingOnly();
 }

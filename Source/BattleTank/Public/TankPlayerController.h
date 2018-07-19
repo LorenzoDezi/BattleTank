@@ -23,11 +23,17 @@ public:
 private:
 	void AimAtCrosshair();
 	bool GetCrosshairLocation(FVector& OutHitLocation) const;
-
+	virtual void SetPawn(APawn* InPawn) override;
+	UFUNCTION()
+	void OnTankDeath();
 	UPROPERTY(EditDefaultsOnly)
 	float CrosshairRelativeLocationX = 0.5f;
 	UPROPERTY(EditDefaultsOnly)
 	float CrosshairRelativeLocationY = 0.33333f;
 	UPROPERTY(EditDefaultsOnly)
 	float CrosshairMaxRange = 10000.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
+	int32 MaxHealth = 100.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
+	int32 MaxAmmo = 50.f;
 };

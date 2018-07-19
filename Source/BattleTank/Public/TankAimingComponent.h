@@ -37,6 +37,7 @@ public:
 	void Fire();
 	UFUNCTION(BlueprintPure, Category = "Info")
 	const int32 GetCurrentAmmo();
+	void SetMaxAmmo(int32 MaxAmmo);
 	const EFiringState GetFiringState();
 
 protected:
@@ -58,7 +59,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float TimeToReloadInSeconds = 2.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 MaxAmmo = 10;
+	int32 MaxAmmo = -1;
 	int32 CurrentAmmo;
 	UPROPERTY(BlueprintAssignable, Category = "Firing")
 	FFireDelegate OnFireDelegate;

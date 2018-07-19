@@ -24,5 +24,6 @@ private:
 	virtual void SetPawn(APawn* InPawn) override;
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
 	float AcceptanceRadius = 100.f;
-		
+	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
+	int32 MaxHealth = 100.f;
 };

@@ -10,7 +10,9 @@
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	auto possessedTank = Cast<ATank>(GetPawn());
+	if (!ensure(possessedTank)) return;
+	possessedTank->SetMaxHealth(MaxHealth);
 }
 
 void ATankAIController::Tick(float Deltaseconds)
@@ -21,8 +23,7 @@ void ATankAIController::Tick(float Deltaseconds)
 
 void ATankAIController::OnTankDeath() {
 	
-	UnPossess();
-	UE_LOG(LogTemp,Warning,TEXT("TANK DEATH"));
+	GetPawn()->DetachFromControllerPendingDestroy();
 }
 
 

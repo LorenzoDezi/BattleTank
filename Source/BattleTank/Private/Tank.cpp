@@ -36,6 +36,17 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	return DamageApplied;
 }
 
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void ATank::SetMaxHealth(int32 MaxHealth)
+{
+	this->MaxHealth = MaxHealth;
+	Health = MaxHealth;
+}
+
 float ATank::GetHealthPercent() const
 {
 	return (float)Health / (float)MaxHealth;
