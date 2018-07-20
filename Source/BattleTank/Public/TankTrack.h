@@ -9,6 +9,8 @@
 /**
  * 
  */
+class ASprungWheel;
+
 UCLASS(meta = (BlueprintSpawnableComponent))
 class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 {

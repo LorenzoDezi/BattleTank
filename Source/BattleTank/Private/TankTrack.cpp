@@ -2,6 +2,7 @@
 
 #include "TankTrack.h"
 #include "Engine/World.h"
+#include "SprungWheel.h"
 
 UTankTrack::UTankTrack() {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -40,7 +41,6 @@ void UTankTrack::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, 
 void UTankTrack::SetThrottle(float Throttle) {
 	CurrentThrottle += Throttle;
 	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle, -1, 1);
-	UE_LOG(LogTemp, Warning, TEXT("THROTTLE BEFORE %s - %f"), *(GetOwner()->GetName()), CurrentThrottle);
 
 }
 
@@ -49,7 +49,6 @@ void UTankTrack::DriveTrack()
 	auto ComponentLocation = GetComponentLocation();
 	auto TankRootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	auto velocity = TankRootComponent->GetComponentVelocity();
-	UE_LOG(LogTemp, Warning, TEXT("THROTTLE AFTER %s - %f"), *(GetOwner()->GetName()), CurrentThrottle);
 	TankRootComponent->AddForceAtLocation(GetForwardVector() * CurrentThrottle * MaxDrivingForce, ComponentLocation);
 }
 
