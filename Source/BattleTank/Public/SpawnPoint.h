@@ -15,13 +15,12 @@ class BATTLETANK_API USpawnPoint : public USceneComponent
 public:	
 	// Sets default values for this component's properties
 	USpawnPoint();
+	TArray<AActor*> GetActorsSpawned();
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AActor> ActorToSpawn = nullptr;
-
-		
-	
+	TArray<AActor*> ActorsSpawned = TArray<AActor*>();	
 };

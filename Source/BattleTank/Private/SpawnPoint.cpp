@@ -11,6 +11,11 @@ USpawnPoint::USpawnPoint()
 	
 }
 
+TArray<AActor*> USpawnPoint::GetActorsSpawned()
+{
+	return ActorsSpawned;
+}
+
 void USpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
@@ -19,4 +24,5 @@ void USpawnPoint::BeginPlay()
 	actorSpawned->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
 	UE_LOG(LogTemp, Warning, TEXT("Finishing spawning actor"));
 	UGameplayStatics::FinishSpawningActor(actorSpawned, GetComponentTransform());
+	ActorsSpawned.Add(actorSpawned);
 }

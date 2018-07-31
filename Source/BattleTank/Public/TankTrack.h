@@ -20,7 +20,7 @@ public:
 	UTankTrack();
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
-	void DriveTrack();
+	void DriveTrack(float Throttle);
 	virtual void BeginPlay() override;
 	virtual void TickComponent(
 		float DeltaTime, 
@@ -32,8 +32,5 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
 	float MaxDrivingForce = 40000000; //Mass (4000) per acceleration (1g) per manual fixing
-	float CurrentThrottle;
-	void ApplySidewaysFriction();
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	TArray<class ASprungWheel*> GetWheels() const;
 };
