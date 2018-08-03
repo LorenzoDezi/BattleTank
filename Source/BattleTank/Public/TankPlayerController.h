@@ -19,6 +19,8 @@ public:
 	virtual void Tick(float Deltaseconds) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void FoundAimingComponent(UTankAimingComponent* component);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void EndedSetup();
 
 private:
 	void AimAtCrosshair();

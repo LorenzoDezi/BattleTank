@@ -14,6 +14,7 @@ void ATankPlayerController::BeginPlay()
 	if (!ensure(aimingComponent)) return;
 	FoundAimingComponent(aimingComponent);
 	aimingComponent->SetMaxAmmo(MaxAmmo);
+	EndedSetup();
 }
 
 void ATankPlayerController::Tick(float Deltaseconds) {

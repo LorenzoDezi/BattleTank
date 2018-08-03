@@ -13,6 +13,7 @@ void ATankAIController::BeginPlay()
 	auto possessedTank = Cast<ATank>(GetPawn());
 	if (!ensure(possessedTank)) return;
 	possessedTank->SetMaxHealth(MaxHealth);
+	EndedSetup();
 }
 
 void ATankAIController::Tick(float Deltaseconds)

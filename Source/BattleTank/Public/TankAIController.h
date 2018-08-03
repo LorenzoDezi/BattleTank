@@ -17,6 +17,8 @@ class BATTLETANK_API ATankAIController : public AAIController
 public:
 	virtual void BeginPlay() override;	
 	virtual void Tick(float Deltaseconds) override;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void EndedSetup();
 private:
 	void AimAtPlayer();
 	UFUNCTION()
