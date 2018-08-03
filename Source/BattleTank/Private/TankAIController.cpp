@@ -13,6 +13,9 @@ void ATankAIController::BeginPlay()
 	auto possessedTank = Cast<ATank>(GetPawn());
 	if (!ensure(possessedTank)) return;
 	possessedTank->SetMaxHealth(MaxHealth);
+	auto AimingComponent = possessedTank->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) return;
+	AimingComponent->SetTimeToReload(TimeToReloadInSeconds);
 	EndedSetup();
 }
 

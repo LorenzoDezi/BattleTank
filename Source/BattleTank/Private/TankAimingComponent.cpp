@@ -96,6 +96,11 @@ void UTankAimingComponent::SetMaxAmmo(int32 MaxAmmo)
 	CurrentAmmo = MaxAmmo;
 }
 
+void UTankAimingComponent::SetTimeToReload(float timeToReloadInSeconds)
+{
+	TimeToReloadInSeconds = timeToReloadInSeconds;
+}
+
 const EFiringState UTankAimingComponent::GetFiringState()
 {
 	return FiringState;

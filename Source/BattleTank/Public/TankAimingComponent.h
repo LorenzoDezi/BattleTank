@@ -38,6 +38,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Info")
 	const int32 GetCurrentAmmo();
 	void SetMaxAmmo(int32 MaxAmmo);
+	void SetTimeToReload(float timeToReloadInSeconds);
 	const EFiringState GetFiringState();
 
 protected:

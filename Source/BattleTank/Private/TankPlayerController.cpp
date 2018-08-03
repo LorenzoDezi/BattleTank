@@ -12,6 +12,7 @@ void ATankPlayerController::BeginPlay()
 	possessedTank->SetMaxHealth(MaxHealth);
 	auto aimingComponent = possessedTank->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(aimingComponent)) return;
+	aimingComponent->SetTimeToReload(TimeToReloadInSeconds);
 	FoundAimingComponent(aimingComponent);
 	aimingComponent->SetMaxAmmo(MaxAmmo);
 	EndedSetup();

@@ -38,4 +38,6 @@ private:
 	int32 MaxHealth = 100.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
 	int32 MaxAmmo = 50.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
+	float TimeToReloadInSeconds = 1.f;
 };
