@@ -23,6 +23,8 @@ public:
 	void IntendTurnRight(float Throw);
 	UFUNCTION(BlueprintCallable, Category = Actions)
 	void IntendTurnLeft(float Throw);
+	UFUNCTION(BlueprintCallable, Category = Actions)
+	void Boost(float Throttle);
 
 	void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 

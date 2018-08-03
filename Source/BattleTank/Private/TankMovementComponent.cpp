@@ -42,3 +42,9 @@ void UTankMovementComponent::Initialise(UTankTrack * leftTrack, UTankTrack * rig
 	LeftTrack = leftTrack;
 	RightTrack = rightTrack;
 }
+
+void UTankMovementComponent::Boost(float Throttle) {
+	LeftTrack->Boost(Throttle);
+	RightTrack->Boost(Throttle);
+}
+

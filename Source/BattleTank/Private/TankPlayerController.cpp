@@ -30,12 +30,9 @@ void ATankPlayerController::AimAtCrosshair() {
 	if (!ensure(AimingComponent))
 		return; 
 	if (GetCrosshairLocation(HitLocation)) {
-		UE_LOG(LogTemp, Warning, TEXT("Got crosshair hit location!"));
 		AimingComponent->AimAt(HitLocation);
 	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("Can't get crosshair hit location!"));
-	}
+
 }
 
 bool ATankPlayerController::GetCrosshairLocation(FVector & OutHitLocation) const

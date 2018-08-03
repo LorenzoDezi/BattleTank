@@ -18,19 +18,24 @@ ASprungWheel::ASprungWheel()
 	SetRootComponent(Spring);
 
 	Axis = CreateAbstractDefaultSubobject<USphereComponent>(FName("Axis"));
-	Axis->AttachToComponent(Spring, FAttachmentTransformRules::KeepRelativeTransform);
+	Axis->SetupAttachment(Spring);
 
 	Wheel = CreateAbstractDefaultSubobject<USphereComponent>(FName("Wheel"));
-	Wheel->AttachToComponent(Axis, FAttachmentTransformRules::KeepRelativeTransform);
+	Wheel->SetupAttachment(Axis);
 	
 
 	WheelAxisConstraint = CreateAbstractDefaultSubobject<UPhysicsConstraintComponent>(FName("WheelAxisConstraint"));
-	WheelAxisConstraint->AttachToComponent(Axis, FAttachmentTransformRules::KeepRelativeTransform);
+	WheelAxisConstraint->SetupAttachment(Axis);
 }
 
 void ASprungWheel::ApplyForce()
 {
 	Wheel->AddForce(Axis->GetForwardVector() * CurrentForceToApply);
+}
+
+void ASprungWheel::AddBoost(float ForceMagnitude)
+{
+	Wheel->AddImpulse(Axis->GetForwardVector() * ForceMagnitude);
 }
 
 // Called when the game starts or when spawned

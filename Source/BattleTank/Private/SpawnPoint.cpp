@@ -18,11 +18,10 @@ TArray<AActor*> USpawnPoint::GetActorsSpawned()
 
 void USpawnPoint::BeginPlay()
 {
-	Super::BeginPlay();
 	if (!ActorToSpawn) return;
-	AActor* actorSpawned = GetWorld()->SpawnActorDeferred<AActor>(ActorToSpawn, GetComponentTransform());
-	actorSpawned->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
-	UE_LOG(LogTemp, Warning, TEXT("Finishing spawning actor"));
-	UGameplayStatics::FinishSpawningActor(actorSpawned, GetComponentTransform());
+	AActor* actorSpawned = GetWorld()->SpawnActorDeferred<AActor>(ActorToSpawn, FTransform(FVector(0,0,240)));
+	actorSpawned->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+	UGameplayStatics::FinishSpawningActor(actorSpawned, FTransform(FVector(0, 0, 240)));
 	ActorsSpawned.Add(actorSpawned);
+	Super::BeginPlay();
 }

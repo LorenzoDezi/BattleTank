@@ -21,6 +21,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 	void DriveTrack(float Throttle);
+	void Boost(float Throttle);
 	virtual void BeginPlay() override;
 	virtual void TickComponent(
 		float DeltaTime, 

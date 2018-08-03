@@ -54,5 +54,16 @@ void UTankTrack::DriveTrack(float CurrentThrottle)
 	}
 }
 
+void UTankTrack::Boost(float Throttle) {
+	Throttle = FMath::Clamp<float>(Throttle, -1, 1);
+	auto ImpulseApplied = Throttle * MaxDrivingForce * 2;
+	auto Wheels = GetWheels();
+	for (auto wheel : Wheels) {
+		wheel->AddBoost(ImpulseApplied);
+	}
+}
+
+
+
 
 

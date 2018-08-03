@@ -18,6 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	ASprungWheel();
 	void AddDrivingForce(float ForceMagnitude);
+	void AddBoost(float ForceMagnitude);
 
 protected:
 	// Called when the game starts or when spawned
