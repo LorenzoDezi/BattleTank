@@ -25,16 +25,19 @@ void UTankMovementComponent::IntendTurnLeft(float Throw) {
 
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
 {
+	
 	auto CurrentDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
 	auto DirectionToAssume = MoveVelocity.GetSafeNormal();
 
 	auto ForwardThrow = FVector::DotProduct(CurrentDirection, DirectionToAssume);
 	auto RightThrow = FVector::CrossProduct(CurrentDirection, DirectionToAssume).Z;
 	auto LeftThrow = FVector::CrossProduct(DirectionToAssume, CurrentDirection).Z;
-
+	UE_LOG(LogTemp, Warning, TEXT("Forward: %f, Right: %f, Left: %f"), ForwardThrow, RightThrow, LeftThrow);
 	IntendMoveForward(ForwardThrow);
-	IntendTurnLeft(LeftThrow);
-	IntendTurnRight(RightThrow);
+	if(LeftThrow > RightThrow)
+		IntendTurnLeft(LeftThrow);
+	else
+		IntendTurnRight(RightThrow);
 }
 
 void UTankMovementComponent::Initialise(UTankTrack * leftTrack, UTankTrack * rightTrack)

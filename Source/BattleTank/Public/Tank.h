@@ -8,6 +8,7 @@
 
 class UTankAimingComponent;
 class UTankMovementComponent;
+class UPatrolRouteComponent;
 class AProjectile;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
@@ -26,6 +27,7 @@ public:
 		class AController * EventInstigator,
 		AActor * DamageCauser
 	) override;
+	void AimAt(FVector AimLocation);
 	void BeginPlay() override;
 	void SetMaxHealth(int32 MaxHealth);
 	UFUNCTION(BlueprintPure)
@@ -36,4 +38,6 @@ private:
 	int32 MaxHealth = 100;
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 Health = MaxHealth;
+	UPROPERTY(EditDefaultsOnly, Category = "Patrol")
+	UPatrolRouteComponent* PatrolComponent;
 };

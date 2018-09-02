@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
 #include "Components/ActorComponent.h"
+#include "PatrolRouteComponent.h"
 #include "GameFramework/Actor.h"
 
 void ATankAIController::BeginPlay()
@@ -19,10 +20,9 @@ void ATankAIController::BeginPlay()
 	EndedSetup();
 }
 
-void ATankAIController::Tick(float Deltaseconds)
+ATankAIController::ATankAIController()
 {
-	Super::Tick(Deltaseconds);
-	AimAtPlayer();
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void ATankAIController::OnTankDeath() {
@@ -30,6 +30,10 @@ void ATankAIController::OnTankDeath() {
 	GetPawn()->DetachFromControllerPendingDestroy();
 }
 
+float ATankAIController::GetAcceptanceRadius()
+{
+	return AcceptanceRadius;
+}
 
 void ATankAIController::AimAtPlayer() {
 

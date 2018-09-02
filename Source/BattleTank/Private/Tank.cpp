@@ -3,6 +3,7 @@
 #include "Projectile.h"
 #include "Engine/World.h"
 #include "Engine/StaticMeshSocket.h"
+#include "PatrolRouteComponent.h"
 #include "TankBarrel.h"
 #include "TankAimingComponent.h"
 
@@ -12,6 +13,8 @@
 ATank::ATank()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	PatrolComponent = CreateDefaultSubobject<UPatrolRouteComponent>(FName("PatrolRouteComponent"));
+	AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
@@ -34,6 +37,14 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	if (!Health)
 		OnDeathDelegate.Broadcast();
 	return DamageApplied;
+}
+
+void ATank::AimAt(FVector AimLocation)
+{
+	auto AimComponent = this->FindComponentByClass<UTankAimingComponent>();
+	if (AimComponent) {
+		AimComponent->AimAt(AimLocation);
+	}
 }
 
 void ATank::BeginPlay()

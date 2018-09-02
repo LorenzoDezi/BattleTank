@@ -16,16 +16,17 @@ class BATTLETANK_API ATankAIController : public AAIController
 	
 public:
 	virtual void BeginPlay() override;	
-	virtual void Tick(float Deltaseconds) override;
+	ATankAIController();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void EndedSetup();
+	float GetAcceptanceRadius();
 private:
 	void AimAtPlayer();
 	UFUNCTION()
 	void OnTankDeath();
 	virtual void SetPawn(APawn* InPawn) override;
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
-	float AcceptanceRadius = 100.f;
+	float AcceptanceRadius = 5.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
 	int32 MaxHealth = 100.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
