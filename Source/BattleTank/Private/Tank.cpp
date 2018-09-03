@@ -7,6 +7,7 @@
 #include "PatrolRouteComponent.h"
 #include "TankBarrel.h"
 #include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
 
 
 
@@ -22,7 +23,6 @@ ATank::ATank()
 	PatrolComponent = CreateDefaultSubobject<UPatrolRouteComponent>(FName("PatrolRouteComponent"));
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(FName("AudioComponent"));
 	AudioComponent->AttachTo(RootComponent);
-	
 	if(AudioComponent)
 		AudioComponent->bAutoActivate = false;
 }
@@ -55,7 +55,7 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent,
 		DamageApplied = Health;
 		Health = 0;
 	}
-	else {
+	else  {
 		Health -= DamageAmount;
 		DamageApplied = DamageAmount;
 	}
@@ -84,4 +84,12 @@ void ATank::SetMaxHealth(int32 MaxHealth)
 float ATank::GetHealthPercent() const
 {
 	return (float)Health / (float)MaxHealth;
+}
+
+int32 ATank::GetCurrentBoosts() const
+{
+	UTankMovementComponent* TankMovComp = FindComponentByClass<UTankMovementComponent>();
+	if (!TankMovComp) return 0;
+	else
+		return TankMovComp->GetCurrentBoosts();
 }

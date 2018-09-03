@@ -55,7 +55,7 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float LaunchSpeed = 100000; //Sensibile default value of 100000
+	float LaunchSpeed = 10000; //Sensibile default value of 100000
 	float LastFireTime = 0.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float TimeToReloadInSeconds = 2.f;

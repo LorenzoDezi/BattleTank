@@ -33,9 +33,9 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
-	if (!ensure(Barrel) || FiringState == EFiringState::OutOfAmmo) return;
+	if (!Barrel || FiringState == EFiringState::OutOfAmmo) return;
 
-	if ((FPlatformTime::Seconds() - LastFireTime) < TimeToReloadInSeconds)
+	if (GetWorld()->GetTimeSeconds() < LastFireTime + TimeToReloadInSeconds)
 		FiringState = EFiringState::Reloading;
 	else if (!(Barrel->GetForwardVector().GetSafeNormal().Equals(AimDirection, 0.1f)))
 		FiringState = EFiringState::Aiming;
@@ -45,20 +45,15 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::AimAt(FVector AimLocation)
 {
-	if (!ensure(Barrel)) return;
+	if (!Barrel) return;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	FVector OutVelocity;
-	float Time = GetWorld()->GetTimeSeconds();
 	if (UGameplayStatics::SuggestProjectileVelocity(this, OutVelocity, StartLocation, 
 		AimLocation, LaunchSpeed, false, 0.f, 0.f, ESuggestProjVelocityTraceOption::DoNotTrace)) {
 		AimDirection = OutVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("%f: %s didn't found aim solution."),
-			Time,
-			*GetName());
-	}	
+	
 }
 
 void UTankAimingComponent::Fire()
@@ -81,12 +76,12 @@ void UTankAimingComponent::Fire()
 		if(TankFire)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankFire,
 				Barrel->GetComponentLocation());
-		LastFireTime = FPlatformTime::Seconds();
+		FiringState = EFiringState::Reloading;
+		LastFireTime = GetWorld()->GetTimeSeconds();
 		if (CurrentAmmo > 0)
 			CurrentAmmo--;
 		if(CurrentAmmo == 0)
 			FiringState = EFiringState::OutOfAmmo;
-
 		//The -1 default value stands for infinite ammo
 		if (CurrentAmmo == -1)
 			CurrentAmmo = 1;

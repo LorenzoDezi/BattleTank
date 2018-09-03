@@ -17,6 +17,7 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 	GENERATED_BODY()
 	
 public:
+	UTankMovementComponent();
 	UFUNCTION(BlueprintCallable, Category = Actions)
 	void IntendMoveForward(float Throw);
 	UFUNCTION(BlueprintCallable, Category = Actions)
@@ -25,6 +26,14 @@ public:
 	void IntendTurnLeft(float Throw);
 	UFUNCTION(BlueprintCallable, Category = Actions)
 	void Boost(float Throttle);
+	int32 GetCurrentBoosts() const;
+	void BeginPlay() override;
+	virtual void TickComponent(
+		float DeltaTime,
+		ELevelTick TickType,
+		FActorComponentTickFunction * ThisTickFunction
+	) override;
+
 
 	void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
@@ -34,6 +43,10 @@ public:
 private:
 	UTankTrack* LeftTrack = nullptr;
 	UTankTrack* RightTrack = nullptr;
-
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Boost")
+	int32 MaxNumberOfBoosts = 2;
+	int32 NumberOfBoosts = 2;
+	UPROPERTY(EditDefaultsOnly, Category = "Boost")
+	float TimeToRecoverBoosts = 3.f;
+	float LastTimeUsedBoost = 0.f;
 };

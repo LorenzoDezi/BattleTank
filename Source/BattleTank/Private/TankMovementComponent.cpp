@@ -5,22 +5,29 @@
 #include "TankTrack.h"
 
 
+UTankMovementComponent::UTankMovementComponent() {
+	PrimaryComponentTick.bCanEverTick = true;
+}
 
 void UTankMovementComponent::IntendMoveForward(float Throw) {
-	if(ensure(LeftTrack))
+	if(LeftTrack)
 		LeftTrack->SetThrottle(Throw);
-	if(ensure(RightTrack))
+	if(RightTrack)
 		RightTrack->SetThrottle(Throw);
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw) {
-	if(ensure(RightTrack))
+	if(RightTrack)
 		RightTrack->SetThrottle(Throw);
+	if (LeftTrack)
+		LeftTrack->SetThrottle(-Throw/2);
 }
 
 void UTankMovementComponent::IntendTurnLeft(float Throw) {
-	if(ensure(LeftTrack))	
+	if(LeftTrack)	
 		LeftTrack->SetThrottle(Throw);
+	if (RightTrack)
+		RightTrack->SetThrottle(-Throw/2);
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
@@ -47,7 +54,32 @@ void UTankMovementComponent::Initialise(UTankTrack * leftTrack, UTankTrack * rig
 }
 
 void UTankMovementComponent::Boost(float Throttle) {
+	//TODO: Play "Empty" sound?
+	if (NumberOfBoosts < 1) return;
+
 	LeftTrack->Boost(Throttle);
 	RightTrack->Boost(Throttle);
+	NumberOfBoosts--;
+	LastTimeUsedBoost = GetWorld()->GetTimeSeconds();
+}
+
+int32 UTankMovementComponent::GetCurrentBoosts() const
+{
+	return NumberOfBoosts;
+}
+
+void UTankMovementComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	NumberOfBoosts = MaxNumberOfBoosts;
+}
+
+void UTankMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+{
+	//TODO: Check GetTimeSeconds
+	if (GetWorld()->GetTimeSeconds() > LastTimeUsedBoost + TimeToRecoverBoosts
+		&& NumberOfBoosts < MaxNumberOfBoosts) {
+		NumberOfBoosts = MaxNumberOfBoosts;
+	}
 }
 

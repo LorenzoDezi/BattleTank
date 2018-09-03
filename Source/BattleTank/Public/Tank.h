@@ -35,6 +35,8 @@ public:
 	void SetMaxHealth(int32 MaxHealth);
 	UFUNCTION(BlueprintPure)
 	float GetHealthPercent() const;
+	UFUNCTION(BlueprintPure)
+	int32 GetCurrentBoosts() const;
 	FDeathDelegate OnDeathDelegate;
 
 private:
