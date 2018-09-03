@@ -2,6 +2,7 @@
 #include "Tank.h"
 #include "Projectile.h"
 #include "Engine/World.h"
+#include "Runtime/Engine/Classes/Components/AudioComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "PatrolRouteComponent.h"
 #include "TankBarrel.h"
@@ -13,11 +14,36 @@
 ATank::ATank()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	//Setting the components
+	RootComponent = CreateDefaultSubobject<USceneComponent>(FName("Root"));
+	UStaticMeshComponent* Mesh = FindComponentByClass<UStaticMeshComponent>();
+	if(Mesh)
+		Mesh->AttachTo(RootComponent);
 	PatrolComponent = CreateDefaultSubobject<UPatrolRouteComponent>(FName("PatrolRouteComponent"));
-	AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(FName("AudioComponent"));
+	AudioComponent->AttachTo(RootComponent);
+	
+	if(AudioComponent)
+		AudioComponent->bAutoActivate = false;
 }
 
-float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+void ATank::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (AudioComponent && TankLoop) {
+		AudioComponent->SetSound(TankLoop);
+	}
+}
+
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+	if (!AudioComponent) return;
+	AudioComponent->Play();
+}
+
+float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, 
+	AController * EventInstigator, AActor * DamageCauser)
 {
 	//The tank is already dead
 	if (!Health) {
@@ -47,10 +73,7 @@ void ATank::AimAt(FVector AimLocation)
 	}
 }
 
-void ATank::BeginPlay()
-{
-	Super::BeginPlay();
-}
+
 
 void ATank::SetMaxHealth(int32 MaxHealth)
 {

@@ -46,7 +46,7 @@ void ASprungWheel::BeginPlay()
 	Wheel->OnComponentHit.AddDynamic(this, &ASprungWheel::OnHit);
 	if (!GetAttachParentActor()) return;
 	Spring->SetConstrainedComponents(
-		Cast<UPrimitiveComponent>(GetAttachParentActor()->GetRootComponent()),
+		Cast<UPrimitiveComponent>(GetAttachParentActor()->FindComponentByClass<UStaticMeshComponent>()),
 		NAME_None,
 		Cast<UPrimitiveComponent>(Axis),
 		NAME_None

@@ -64,8 +64,10 @@ private:
 	int32 CurrentAmmo;
 	UPROPERTY(BlueprintAssignable, Category = "Firing")
 	FFireDelegate OnFireDelegate;
-
-
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* TankFire;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* TankOutOfAmmo;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> Projectile = nullptr;
 	//Used to check for the aiming FiringState

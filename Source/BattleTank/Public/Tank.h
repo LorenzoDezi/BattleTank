@@ -9,6 +9,8 @@
 class UTankAimingComponent;
 class UTankMovementComponent;
 class UPatrolRouteComponent;
+class USoundBase;
+class UAudioComponent;
 class AProjectile;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
@@ -20,6 +22,7 @@ class BATTLETANK_API ATank : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ATank();
+	virtual void PostInitializeComponents() override;
 	virtual float TakeDamage
 	(
 		float DamageAmount,
@@ -40,4 +43,7 @@ private:
 	int32 Health = MaxHealth;
 	UPROPERTY(EditDefaultsOnly, Category = "Patrol")
 	UPatrolRouteComponent* PatrolComponent;
+	UAudioComponent* AudioComponent;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* TankLoop;
 };

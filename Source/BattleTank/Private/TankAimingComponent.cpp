@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Engine/World.h"
+#include "Components/AudioComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 
@@ -62,15 +63,24 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 
 void UTankAimingComponent::Fire()
 {
-	if (!ensure(Barrel) || FiringState == EFiringState::OutOfAmmo) return;
-
+	if (!Barrel) return;
 	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
-	if (!ensure(projectileSocket) || !ensure(Projectile)) return;
+	if (!projectileSocket || !Projectile) return;
+	if (FiringState == EFiringState::OutOfAmmo) {
+		if(TankOutOfAmmo)
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankOutOfAmmo,
+				Barrel->GetComponentLocation());
+		return;
+	}
+
 	FTransform transform;
 	if (projectileSocket->GetSocketTransform(transform, Barrel) 
 		&& FiringState != EFiringState::Reloading ) {
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(Projectile, transform);
 		projectile->Launch(LaunchSpeed);
+		if(TankFire)
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankFire,
+				Barrel->GetComponentLocation());
 		LastFireTime = FPlatformTime::Seconds();
 		if (CurrentAmmo > 0)
 			CurrentAmmo--;
