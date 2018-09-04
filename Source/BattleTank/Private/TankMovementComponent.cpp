@@ -32,19 +32,21 @@ void UTankMovementComponent::IntendTurnLeft(float Throw) {
 
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
 {
-	
-	auto CurrentDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	auto TankMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
+	if (!TankMesh) return;
+	auto CurrentDirection = TankMesh->GetForwardVector().GetSafeNormal();
 	auto DirectionToAssume = MoveVelocity.GetSafeNormal();
 
 	auto ForwardThrow = FVector::DotProduct(CurrentDirection, DirectionToAssume);
 	auto RightThrow = FVector::CrossProduct(CurrentDirection, DirectionToAssume).Z;
-	auto LeftThrow = FVector::CrossProduct(DirectionToAssume, CurrentDirection).Z;
-	UE_LOG(LogTemp, Warning, TEXT("Forward: %f, Right: %f, Left: %f"), ForwardThrow, RightThrow, LeftThrow);
-	IntendMoveForward(ForwardThrow);
-	if(LeftThrow > RightThrow)
-		IntendTurnLeft(LeftThrow);
-	else
+	UE_LOG(LogTemp, Warning, TEXT("REQUEST DIRECT MOVE Forward: %f, Side: %f"), ForwardThrow, RightThrow);
+	//TODO: Refactor
+	if (FMath::Abs(ForwardThrow) > FMath::Abs(RightThrow))
+		IntendMoveForward(ForwardThrow);
+	else if (RightThrow > 0)
 		IntendTurnRight(RightThrow);
+	else
+		IntendTurnLeft(RightThrow);
 }
 
 void UTankMovementComponent::Initialise(UTankTrack * leftTrack, UTankTrack * rightTrack)
@@ -60,6 +62,7 @@ void UTankMovementComponent::Boost(float Throttle) {
 	LeftTrack->Boost(Throttle);
 	RightTrack->Boost(Throttle);
 	NumberOfBoosts--;
+	//TODO: Play "Boost
 	LastTimeUsedBoost = GetWorld()->GetTimeSeconds();
 }
 

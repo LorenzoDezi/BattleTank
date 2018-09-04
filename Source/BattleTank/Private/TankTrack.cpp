@@ -42,6 +42,7 @@ TArray<ASprungWheel*> UTankTrack::GetWheels() const
 
 void UTankTrack::SetThrottle(float Throttle) {
 	float CurrentThrottle = FMath::Clamp<float>(Throttle, -1, 1);
+	UE_LOG(LogTemp, Warning, TEXT("Throttle set on track %f"), CurrentThrottle);
 	DriveTrack(CurrentThrottle);
 }
 

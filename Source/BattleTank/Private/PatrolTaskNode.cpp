@@ -25,6 +25,5 @@ EBTNodeResult::Type UPatrolTaskNode::ExecuteTask(UBehaviorTreeComponent & OwnerC
 	//Cycle the waypoint index
 	Index++;
 	BlackboardComponent->SetValueAsInt(WaypointIndexKey.SelectedKeyName, Index % (patrolRouteComponent->GetNumberOfPatrolPoints()));
-	UE_LOG(LogTemp, Warning, TEXT("Index value - %d"), Index);
 	return EBTNodeResult::Succeeded;
 }

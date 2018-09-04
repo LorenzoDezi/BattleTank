@@ -16,30 +16,15 @@ ATank::ATank()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	//Setting the components
-	RootComponent = CreateDefaultSubobject<USceneComponent>(FName("Root"));
 	UStaticMeshComponent* Mesh = FindComponentByClass<UStaticMeshComponent>();
-	if(Mesh)
-		Mesh->AttachTo(RootComponent);
+	RootComponent = Mesh;
 	PatrolComponent = CreateDefaultSubobject<UPatrolRouteComponent>(FName("PatrolRouteComponent"));
-	AudioComponent = CreateDefaultSubobject<UAudioComponent>(FName("AudioComponent"));
-	AudioComponent->AttachTo(RootComponent);
-	if(AudioComponent)
-		AudioComponent->bAutoActivate = false;
-}
-
-void ATank::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-	if (AudioComponent && TankLoop) {
-		AudioComponent->SetSound(TankLoop);
-	}
+	
 }
 
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!AudioComponent) return;
-	AudioComponent->Play();
 }
 
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, 

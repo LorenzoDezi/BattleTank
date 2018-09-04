@@ -30,6 +30,7 @@ ASprungWheel::ASprungWheel()
 
 void ASprungWheel::ApplyForce()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Force applied on wheel %f"), CurrentForceToApply);
 	Wheel->AddForce(Axis->GetForwardVector() * CurrentForceToApply);
 }
 
