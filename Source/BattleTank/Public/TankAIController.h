@@ -6,6 +6,16 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
+
+UENUM()
+enum class ETankAIState : uint8 {
+	Attacking,
+	Suspicious,
+	Patrolling
+};
+
+class AActor;
+
 /**
  * 
  */
@@ -20,6 +30,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void EndedSetup();
 	float GetAcceptanceRadius();
+	virtual void Tick
+	(
+		float DeltaSeconds
+	) override;
+	void SetState(ETankAIState state);
+	void SetEnemy(AActor* enemy);
 private:
 	void AimAtPlayer();
 	UFUNCTION()
@@ -31,4 +47,11 @@ private:
 	int32 MaxHealth = 100.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
 	float TimeToReloadInSeconds = 2.f;
+
+	//////////////////////////////////////////////////////////
+	//AI Properties
+	ETankAIState TankAIState = ETankAIState::Patrolling;
+	AActor* Enemy = nullptr;
+	FVector LastSeenLocation = FVector();
+	
 };

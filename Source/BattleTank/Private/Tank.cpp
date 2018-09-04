@@ -7,6 +7,7 @@
 #include "PatrolRouteComponent.h"
 #include "TankBarrel.h"
 #include "TankAimingComponent.h"
+#include "TankTurret.h"
 #include "TankMovementComponent.h"
 
 
@@ -77,4 +78,18 @@ int32 ATank::GetCurrentBoosts() const
 	if (!TankMovComp) return 0;
 	else
 		return TankMovComp->GetCurrentBoosts();
+}
+
+void ATank::GetActorEyesViewPoint(FVector & OutLocation, FRotator & OutRotation) const
+{
+	auto Mesh = this->FindComponentByClass<UTankTurret>();
+	if (!Mesh) {
+		UE_LOG(LogTemp, Warning, TEXT("Not found any Turret! Instead %s"), *Mesh->GetName())
+		return Super::GetActorEyesViewPoint(OutLocation, OutRotation); 
+	}
+	UE_LOG(LogTemp, Warning, TEXT("GetActorEyesViewPoint called!"))
+	if (!Mesh->GetSocketByName(FName("ViewPoint"))) return Super::GetActorEyesViewPoint(OutLocation, OutRotation);
+	UE_LOG(LogTemp, Warning, TEXT("Socket %s found!"), *(Mesh->GetSocketByName(FName("ViewPoint"))->GetName()));
+	OutLocation = Mesh->GetSocketLocation(FName("ViewPoint"));
+	OutRotation = Mesh->GetSocketRotation(FName("ViewPoint"));
 }

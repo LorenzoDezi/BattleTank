@@ -58,19 +58,25 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 
 void UTankAimingComponent::Fire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Fire called %s"), *Barrel->GetName());
 	if (!Barrel) return;
 	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
+	UE_LOG(LogTemp, Warning, TEXT("Fire called %s"), *projectileSocket->GetName());
+
 	if (!projectileSocket || !Projectile) return;
 	if (FiringState == EFiringState::OutOfAmmo) {
 		if(TankOutOfAmmo)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankOutOfAmmo,
 				Barrel->GetComponentLocation());
+		UE_LOG(LogTemp, Warning, TEXT("Tank Out Of Ammo"));
 		return;
+
 	}
 
 	FTransform transform;
 	if (projectileSocket->GetSocketTransform(transform, Barrel) 
 		&& FiringState != EFiringState::Reloading ) {
+		UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(Projectile, transform);
 		projectile->Launch(LaunchSpeed);
 		if(TankFire)

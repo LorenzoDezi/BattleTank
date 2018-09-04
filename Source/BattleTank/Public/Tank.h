@@ -37,6 +37,11 @@ public:
 	UFUNCTION(BlueprintPure)
 	int32 GetCurrentBoosts() const;
 	FDeathDelegate OnDeathDelegate;
+	virtual void GetActorEyesViewPoint
+	(
+		FVector & OutLocation,
+		FRotator & OutRotation
+	) const override;
 
 private:
 	int32 MaxHealth = 100;

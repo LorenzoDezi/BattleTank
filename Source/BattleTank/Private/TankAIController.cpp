@@ -22,7 +22,7 @@ void ATankAIController::BeginPlay()
 
 ATankAIController::ATankAIController()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ATankAIController::OnTankDeath() {
@@ -35,18 +35,50 @@ float ATankAIController::GetAcceptanceRadius()
 	return AcceptanceRadius;
 }
 
+void ATankAIController::Tick(float DeltaSeconds)
+{
+	switch (TankAIState) {
+	case ETankAIState::Attacking:
+		//TODO
+		AimAtPlayer();
+		break;
+	case ETankAIState::Suspicious:
+		//AimSuspiciously(); going around 90 - -90 degrees
+		break;
+	case ETankAIState::Patrolling:
+		//AimPatrolling(); forward
+		break;
+	}
+}
+
+void ATankAIController::SetState(ETankAIState state)
+{
+	TankAIState = state;
+}
+
+void ATankAIController::SetEnemy(AActor * enemy)
+{
+	this->Enemy = enemy;
+}
+
 void ATankAIController::AimAtPlayer() {
 
 	auto ControlledTank = GetPawn();
-	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (ensure(PlayerTank && ControlledTank)) {
-		MoveToActor(PlayerTank, AcceptanceRadius);
-		FVector HitLocation = PlayerTank->GetTransform().GetLocation();
+	if (Enemy && ControlledTank) {
+		MoveToActor(Enemy, AcceptanceRadius);
+		FVector HitLocation = Enemy->GetTransform().GetLocation();
+		LastSeenLocation = HitLocation;
 		auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
-		if (!ensure(AimingComponent)) return;
+		if (!AimingComponent) return;
 		AimingComponent->AimAt(HitLocation);
 		if (AimingComponent->GetFiringState() == EFiringState::Locked) {
+			UE_LOG(LogTemp, Warning, TEXT("STATE WHEN AIMING - FIRING"));
 			AimingComponent->Fire();
+		} else if (AimingComponent->GetFiringState() == EFiringState::OutOfAmmo) {
+			UE_LOG(LogTemp, Warning, TEXT("STATE WHEN AIMING - OUT OF AMMO"));
+		}
+		else if (AimingComponent->GetFiringState() == EFiringState::Reloading) {
+			UE_LOG(LogTemp, Warning, TEXT("STATE WHEN AIMING - RELOADING"));
 		}
 	}
 }
