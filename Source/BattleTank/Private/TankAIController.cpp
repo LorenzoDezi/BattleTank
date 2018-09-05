@@ -71,15 +71,10 @@ void ATankAIController::AimAtPlayer() {
 		auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 		if (!AimingComponent) return;
 		AimingComponent->AimAt(HitLocation);
+		UE_LOG(LogTemp, Warning, TEXT(" FIRE AIM AT PLAYER CALLED"));
 		if (AimingComponent->GetFiringState() == EFiringState::Locked) {
-			UE_LOG(LogTemp, Warning, TEXT("STATE WHEN AIMING - FIRING"));
 			AimingComponent->Fire();
-		} else if (AimingComponent->GetFiringState() == EFiringState::OutOfAmmo) {
-			UE_LOG(LogTemp, Warning, TEXT("STATE WHEN AIMING - OUT OF AMMO"));
-		}
-		else if (AimingComponent->GetFiringState() == EFiringState::Reloading) {
-			UE_LOG(LogTemp, Warning, TEXT("STATE WHEN AIMING - RELOADING"));
-		}
+		} 
 	}
 }
 

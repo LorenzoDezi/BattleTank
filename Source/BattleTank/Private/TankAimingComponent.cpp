@@ -35,12 +35,15 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	if (!Barrel || FiringState == EFiringState::OutOfAmmo) return;
 
-	if (GetWorld()->GetTimeSeconds() < LastFireTime + TimeToReloadInSeconds)
+	if (GetWorld()->GetTimeSeconds() < LastFireTime + TimeToReloadInSeconds) {
 		FiringState = EFiringState::Reloading;
-	else if (!(Barrel->GetForwardVector().GetSafeNormal().Equals(AimDirection, 0.1f)))
+	}
+	else if (!(Barrel->GetForwardVector().GetSafeNormal().Equals(AimDirection, 0.2f))) {
 		FiringState = EFiringState::Aiming;
-	else
+	}
+	else {
 		FiringState = EFiringState::Locked;
+	}
 }
 
 void UTankAimingComponent::AimAt(FVector AimLocation)
@@ -58,46 +61,39 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 
 void UTankAimingComponent::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Fire called %s"), *Barrel->GetName());
 	if (!Barrel) return;
 	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
-	UE_LOG(LogTemp, Warning, TEXT("Fire called %s"), *projectileSocket->GetName());
-
 	if (!projectileSocket || !Projectile) return;
 	if (FiringState == EFiringState::OutOfAmmo) {
 		if(TankOutOfAmmo)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankOutOfAmmo,
 				Barrel->GetComponentLocation());
-		UE_LOG(LogTemp, Warning, TEXT("Tank Out Of Ammo"));
 		return;
-
 	}
 
 	FTransform transform;
 	if (projectileSocket->GetSocketTransform(transform, Barrel) 
 		&& FiringState != EFiringState::Reloading ) {
-		UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(Projectile, transform);
 		projectile->Launch(LaunchSpeed);
 		if(TankFire)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankFire,
 				Barrel->GetComponentLocation());
-		FiringState = EFiringState::Reloading;
 		LastFireTime = GetWorld()->GetTimeSeconds();
+		FiringState = EFiringState::Reloading;
 		if (CurrentAmmo > 0)
 			CurrentAmmo--;
-		if(CurrentAmmo == 0)
-			FiringState = EFiringState::OutOfAmmo;
 		//The -1 default value stands for infinite ammo
-		if (CurrentAmmo == -1)
+		if (MaxAmmo == -1)
 			CurrentAmmo = 1;
+		if (CurrentAmmo == 0)
+			FiringState = EFiringState::OutOfAmmo;
 		OnFireDelegate.Broadcast();
 	}
 }
 
 const int32 UTankAimingComponent::GetCurrentAmmo()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CURRENT AMMO - %d"), CurrentAmmo);
 	return CurrentAmmo;
 }
 

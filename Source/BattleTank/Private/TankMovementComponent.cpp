@@ -2,6 +2,7 @@
 
 #include "TankMovementComponent.h"
 #include "Engine/World.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "TankTrack.h"
 
 
@@ -39,14 +40,14 @@ void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, boo
 
 	auto ForwardThrow = FVector::DotProduct(CurrentDirection, DirectionToAssume);
 	auto RightThrow = FVector::CrossProduct(CurrentDirection, DirectionToAssume).Z;
-	UE_LOG(LogTemp, Warning, TEXT("REQUEST DIRECT MOVE Forward: %f, Side: %f"), ForwardThrow, RightThrow);
-	//TODO: Refactor
-	if (FMath::Abs(ForwardThrow) > FMath::Abs(RightThrow))
+	if (FMath::Abs(ForwardThrow) > FMath::Abs(RightThrow)) {
 		IntendMoveForward(ForwardThrow);
-	else if (RightThrow > 0)
+		RightThrow /= 2;
+	}
+	if (RightThrow > 0)
 		IntendTurnRight(RightThrow);
 	else
-		IntendTurnLeft(RightThrow);
+		IntendTurnLeft(-RightThrow);
 }
 
 void UTankMovementComponent::Initialise(UTankTrack * leftTrack, UTankTrack * rightTrack)
@@ -56,13 +57,20 @@ void UTankMovementComponent::Initialise(UTankTrack * leftTrack, UTankTrack * rig
 }
 
 void UTankMovementComponent::Boost(float Throttle) {
-	//TODO: Play "Empty" sound?
-	if (NumberOfBoosts < 1) return;
+	
+	if (NumberOfBoosts < 1) {
+		if(TankBoostEmpty && LeftTrack) 
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankBoostEmpty,
+			LeftTrack->GetComponentLocation());
+		return;
+	}
 
 	LeftTrack->Boost(Throttle);
 	RightTrack->Boost(Throttle);
 	NumberOfBoosts--;
-	//TODO: Play "Boost
+	if (TankBoost && LeftTrack)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankBoost,
+			LeftTrack->GetComponentLocation());
 	LastTimeUsedBoost = GetWorld()->GetTimeSeconds();
 }
 

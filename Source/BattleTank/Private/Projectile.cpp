@@ -45,9 +45,7 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Launch(float Speed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Inside launch, at %f"), Speed);
 	if (!ProjectileMovComponent) return;
-	UE_LOG(LogTemp, Warning, TEXT("After check projectile %s"), *ProjectileMovComponent->GetName());
 	ProjectileMovComponent->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovComponent->Activate();
 }

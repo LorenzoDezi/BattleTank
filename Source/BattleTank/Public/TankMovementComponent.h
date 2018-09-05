@@ -7,6 +7,7 @@
 #include "TankMovementComponent.generated.h"
 
 class UTankTrack;
+class USoundBase;
 
 /**
  * 
@@ -49,4 +50,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Boost")
 	float TimeToRecoverBoosts = 3.f;
 	float LastTimeUsedBoost = 0.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Boost")
+	USoundBase* TankBoost = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Boost")
+	USoundBase* TankBoostEmpty = nullptr;
 };

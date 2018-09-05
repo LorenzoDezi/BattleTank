@@ -84,12 +84,9 @@ void ATank::GetActorEyesViewPoint(FVector & OutLocation, FRotator & OutRotation)
 {
 	auto Mesh = this->FindComponentByClass<UTankTurret>();
 	if (!Mesh) {
-		UE_LOG(LogTemp, Warning, TEXT("Not found any Turret! Instead %s"), *Mesh->GetName())
 		return Super::GetActorEyesViewPoint(OutLocation, OutRotation); 
 	}
-	UE_LOG(LogTemp, Warning, TEXT("GetActorEyesViewPoint called!"))
 	if (!Mesh->GetSocketByName(FName("ViewPoint"))) return Super::GetActorEyesViewPoint(OutLocation, OutRotation);
-	UE_LOG(LogTemp, Warning, TEXT("Socket %s found!"), *(Mesh->GetSocketByName(FName("ViewPoint"))->GetName()));
 	OutLocation = Mesh->GetSocketLocation(FName("ViewPoint"));
 	OutRotation = Mesh->GetSocketRotation(FName("ViewPoint"));
 }
