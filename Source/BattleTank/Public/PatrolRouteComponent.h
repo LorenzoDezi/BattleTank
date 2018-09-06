@@ -22,8 +22,8 @@ public:
 	int32 GetNumberOfPatrolPoints();
 
 private:
-	UPROPERTY(EditInstanceOnly, Category = "Patrol")
-		TArray<AActor*> PatrolPoints = TArray<AActor*>();
+	UPROPERTY(EditAnywhere, Category = "Patrol")
+	TArray<AActor*> PatrolPoints = TArray<AActor*>();
 
 		
 	

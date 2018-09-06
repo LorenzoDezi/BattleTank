@@ -18,9 +18,7 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 	//Setting the components
 	UStaticMeshComponent* Mesh = FindComponentByClass<UStaticMeshComponent>();
-	RootComponent = Mesh;
-	PatrolComponent = CreateDefaultSubobject<UPatrolRouteComponent>(FName("PatrolRouteComponent"));
-	
+	RootComponent = Mesh;	
 }
 
 void ATank::BeginPlay()
