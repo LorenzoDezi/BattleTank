@@ -1,11 +1,15 @@
 
 #include "Tank.h"
 #include "Projectile.h"
+#include "Tower.h"
 #include "Engine/World.h"
 #include "Runtime/Engine/Classes/Components/AudioComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "TankAIController.h"
 #include "Engine/StaticMeshSocket.h"
 #include "PatrolRouteComponent.h"
 #include "TankBarrel.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "TankAimingComponent.h"
 #include "TankTurret.h"
 #include "TankMovementComponent.h"
@@ -24,6 +28,11 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	UPatrolRouteComponent* patrolComponent = FindComponentByClass<UPatrolRouteComponent>();
+	if (!patrolComponent) return;
+	TArray<AActor*> patrolPoints = TArray<AActor*>();
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("Tower"), patrolPoints);
+	patrolComponent->SetPatrolPoints(patrolPoints);
 }
 
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, 
@@ -55,6 +64,19 @@ void ATank::AimAt(FVector AimLocation)
 	if (AimComponent) {
 		AimComponent->AimAt(AimLocation);
 	}
+}
+
+void ATank::OnMotherTowerAlarm(ATower* tower)
+{
+	auto controller = this->GetController();
+	if (!controller) return;
+	ATankAIController* AIController = nullptr;
+	if (controller->IsA(ATankAIController::StaticClass()))
+		AIController = Cast<ATankAIController>(controller);
+	if (!AIController) return;
+	auto Blackboard = AIController->GetBlackboardComponent();
+	if (!Blackboard) return;
+	Blackboard->SetValueAsObject(FName("MotherTower"), tower);
 }
 
 

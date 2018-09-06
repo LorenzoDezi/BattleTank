@@ -11,6 +11,7 @@ class UTankMovementComponent;
 class UPatrolRouteComponent;
 class USoundBase;
 class UAudioComponent;
+class ATower;
 class AProjectile;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
@@ -30,6 +31,7 @@ public:
 		AActor * DamageCauser
 	) override;
 	void AimAt(FVector AimLocation);
+	void OnMotherTowerAlarm(ATower* tower);
 	void BeginPlay() override;
 	void SetMaxHealth(int32 MaxHealth);
 	UFUNCTION(BlueprintPure)
@@ -49,4 +51,5 @@ private:
 	int32 Health = MaxHealth;
 	UPROPERTY(EditDefaultsOnly, Category = "Patrol")
 	UPatrolRouteComponent* PatrolComponent;
+
 };

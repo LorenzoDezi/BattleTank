@@ -30,5 +30,10 @@ int32 UPatrolRouteComponent::GetNumberOfPatrolPoints()
 	return PatrolPoints.Num();
 }
 
+void UPatrolRouteComponent::SetPatrolPoints(TArray<AActor*> patrolPoints)
+{
+	PatrolPoints = patrolPoints;
+}
+
 
 

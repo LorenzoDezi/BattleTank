@@ -20,11 +20,8 @@ public:
 	TArray<AActor*> GetPatrolPoints();
 	AActor* GetPatrolPointAt(int32 index);
 	int32 GetNumberOfPatrolPoints();
+	void SetPatrolPoints(TArray<AActor*> patrolPoints);
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Patrol")
 	TArray<AActor*> PatrolPoints = TArray<AActor*>();
-
-		
-	
 };
