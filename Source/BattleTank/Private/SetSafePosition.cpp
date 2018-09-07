@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#include "SetWaypointToResetBadPosition.h"
+#include "SetSafePosition.h"
 #include "Engine/World.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Runtime/NavigationSystem/Public/NavigationSystem.h"
-#include "TankAIController.h"
+#include "MachineAIController.h"
 
-EBTNodeResult::Type USetWaypointToResetBadPosition::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
+EBTNodeResult::Type USetSafePosition::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	auto BlackboardComponent = OwnerComp.GetBlackboardComponent();
-	auto tankControllerAI = Cast<ATankAIController>(OwnerComp.GetAIOwner());
+	auto tankControllerAI = Cast<AMachineAIController>(OwnerComp.GetAIOwner());
 	auto pawn = tankControllerAI->GetPawn();
 	if (pawn == nullptr) return EBTNodeResult::Failed;
 	UNavigationSystemV1* Nav = UNavigationSystemV1::GetNavigationSystem(tankControllerAI->GetWorld());

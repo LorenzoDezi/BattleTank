@@ -1,23 +1,23 @@
 
-#include "Tank.h"
+#include "Machine.h"
 #include "Projectile.h"
 #include "Tower.h"
 #include "Engine/World.h"
 #include "Runtime/Engine/Classes/Components/AudioComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "TankAIController.h"
+#include "MachineAIController.h"
 #include "Engine/StaticMeshSocket.h"
 #include "PatrolRouteComponent.h"
-#include "TankBarrel.h"
+#include "MachineBarrel.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "TankAimingComponent.h"
-#include "TankTurret.h"
+#include "MachineAimingComponent.h"
+#include "MachineTurret.h"
 #include "TankMovementComponent.h"
 
 
 
 // Sets default values
-ATank::ATank()
+AMachine::AMachine()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	//Setting the components
@@ -25,7 +25,7 @@ ATank::ATank()
 	RootComponent = Mesh;	
 }
 
-void ATank::BeginPlay()
+void AMachine::BeginPlay()
 {
 	Super::BeginPlay();
 	UPatrolRouteComponent* patrolComponent = FindComponentByClass<UPatrolRouteComponent>();
@@ -35,7 +35,7 @@ void ATank::BeginPlay()
 	patrolComponent->SetPatrolPoints(patrolPoints);
 }
 
-float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, 
+float AMachine::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, 
 	AController * EventInstigator, AActor * DamageCauser)
 {
 	//The tank is already dead
@@ -58,21 +58,21 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent,
 	return DamageApplied;
 }
 
-void ATank::AimAt(FVector AimLocation)
+void AMachine::AimAt(FVector AimLocation)
 {
-	auto AimComponent = this->FindComponentByClass<UTankAimingComponent>();
+	auto AimComponent = this->FindComponentByClass<UMachineAimingComponent>();
 	if (AimComponent) {
 		AimComponent->AimAt(AimLocation);
 	}
 }
 
-void ATank::OnMotherTowerAlarm(ATower* tower)
+void AMachine::OnMotherTowerAlarm(ATower* tower)
 {
 	auto controller = this->GetController();
 	if (!controller) return;
-	ATankAIController* AIController = nullptr;
-	if (controller->IsA(ATankAIController::StaticClass()))
-		AIController = Cast<ATankAIController>(controller);
+	AMachineAIController* AIController = nullptr;
+	if (controller->IsA(AMachineAIController::StaticClass()))
+		AIController = Cast<AMachineAIController>(controller);
 	if (!AIController) return;
 	auto Blackboard = AIController->GetBlackboardComponent();
 	if (!Blackboard) return;
@@ -81,18 +81,18 @@ void ATank::OnMotherTowerAlarm(ATower* tower)
 
 
 
-void ATank::SetMaxHealth(int32 MaxHealth)
+void AMachine::SetMaxHealth(int32 MaxHealth)
 {
 	this->MaxHealth = MaxHealth;
 	Health = MaxHealth;
 }
 
-float ATank::GetHealthPercent_Implementation() const
+float AMachine::GetHealthPercent_Implementation() const
 {
 	return (float)Health / (float)MaxHealth;
 }
 
-int32 ATank::GetCurrentBoosts() const
+int32 AMachine::GetCurrentBoosts() const
 {
 	UTankMovementComponent* TankMovComp = FindComponentByClass<UTankMovementComponent>();
 	if (!TankMovComp) return 0;
@@ -100,9 +100,9 @@ int32 ATank::GetCurrentBoosts() const
 		return TankMovComp->GetCurrentBoosts();
 }
 
-void ATank::GetActorEyesViewPoint(FVector & OutLocation, FRotator & OutRotation) const
+void AMachine::GetActorEyesViewPoint(FVector & OutLocation, FRotator & OutRotation) const
 {
-	auto Mesh = this->FindComponentByClass<UTankTurret>();
+	auto Mesh = this->FindComponentByClass<UMachineTurret>();
 	if (!Mesh) {
 		return Super::GetActorEyesViewPoint(OutLocation, OutRotation); 
 	}

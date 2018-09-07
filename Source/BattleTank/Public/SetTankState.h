@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "TankAIController.h"
+#include "MachineAIController.h"
 #include "SetTankState.generated.h"
 
 /**
@@ -19,6 +19,6 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "State")
-	ETankAIState StateToSet;
+	EMachineAIState StateToSet;
 	
 };

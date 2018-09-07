@@ -3,7 +3,7 @@
 #include "Tower.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "Engine/World.h"
-#include "Tank.h"
+#include "Machine.h"
 
 
 // Sets default values
@@ -70,14 +70,14 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 	return DamageApplied;
 }
 
-ATank* ATower::SpawnTank()
+AMachine* ATower::SpawnTank()
 {
 	FVector Location = Mesh->GetSocketLocation(FName("TankSpawn"));
 	FRotator Rotation = Mesh->GetSocketRotation(FName("TankSpawn"));
-	ATank* tankSpawned = GetWorld()->SpawnActor<ATank>(TankToSpawn, Location, Rotation);
+	AMachine* tankSpawned = GetWorld()->SpawnActor<AMachine>(TankToSpawn, Location, Rotation);
 	if (!tankSpawned) return nullptr;
 	tankSpawned->Tags.Add(FName("Enemy"));
-	OnAlarmDelegate.AddDynamic(tankSpawned, &ATank::OnMotherTowerAlarm);
+	OnAlarmDelegate.AddDynamic(tankSpawned, &AMachine::OnMotherTowerAlarm);
 	return tankSpawned;
 }
 

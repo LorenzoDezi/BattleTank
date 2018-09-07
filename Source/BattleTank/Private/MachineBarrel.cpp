@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TankBarrel.h"
+#include "MachineBarrel.h"
 #include "Engine/World.h"
 
-void UTankBarrel::Elevate(float RelativeSpeed) {
+void UMachineBarrel::Elevate(float RelativeSpeed) {
 	
 	RelativeSpeed = FMath::Clamp(RelativeSpeed, -1.f, 1.f);
 

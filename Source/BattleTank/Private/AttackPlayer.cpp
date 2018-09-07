@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AttackPlayer.h"
-#include "TankAIController.h"
+#include "MachineAIController.h"
 #include "Runtime/AIModule/Classes/AIController.h"
-#include "Tank.h"
+#include "Machine.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 
@@ -11,9 +11,9 @@ EBTNodeResult::Type UAttackPlayer::ExecuteTask(UBehaviorTreeComponent & OwnerCom
 {
 	auto BlackboardComponent = OwnerComp.GetBlackboardComponent();
 	auto EnemyAsActor = Cast<AActor>(BlackboardComponent->GetValueAsObject(TankPlayerKey.SelectedKeyName));
-	auto TankAI = Cast<ATankAIController>(OwnerComp.GetAIOwner());
+	auto TankAI = Cast<AMachineAIController>(OwnerComp.GetAIOwner());
 	if (TankAI == nullptr) return EBTNodeResult::Failed;
 	TankAI->SetEnemy(EnemyAsActor);
-	TankAI->SetState(ETankAIState::Attacking);
+	TankAI->SetState(EMachineAIState::Attacking);
 	return EBTNodeResult::Succeeded;
 }

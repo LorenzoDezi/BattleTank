@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
-#include "TankTurret.generated.h"
+#include "MachineTurret.generated.h"
 
 /**
  * 
  */
 UCLASS(meta = (BlueprintSpawnableComponent), hidecategories = ("Collision"))
-class BATTLETANK_API UTankTurret : public UStaticMeshComponent
+class BATTLETANK_API UMachineTurret : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 public:

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "PatrolTaskNode.generated.h"
+#include "PatrolCycleWaypoint.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLETANK_API UPatrolTaskNode : public UBTTaskNode
+class BATTLETANK_API UPatrolCycleWaypoint : public UBTTaskNode
 {
 	GENERATED_BODY()
 

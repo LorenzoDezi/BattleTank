@@ -1,80 +1,80 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TankAIController.h"
-#include "Tank.h"
+#include "MachineAIController.h"
+#include "Machine.h"
 #include "Engine/World.h"
-#include "TankAimingComponent.h"
+#include "MachineAimingComponent.h"
 #include "Components/ActorComponent.h"
 #include "PatrolRouteComponent.h"
 #include "GameFramework/Actor.h"
 
-void ATankAIController::BeginPlay()
+void AMachineAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-ATankAIController::ATankAIController()
+AMachineAIController::AMachineAIController()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ATankAIController::OnTankDeath() {
+void AMachineAIController::OnTankDeath() {
 	
 	GetPawn()->DetachFromControllerPendingDestroy();
 }
 
-float ATankAIController::GetAcceptanceRadius()
+float AMachineAIController::GetAcceptanceRadius()
 {
 	return AcceptanceRadius;
 }
 
-void ATankAIController::Possess(APawn * pawn)
+void AMachineAIController::Possess(APawn * pawn)
 {
 	Super::Possess(pawn);
-	auto possessedTank = Cast<ATank>(pawn);
+	auto possessedTank = Cast<AMachine>(pawn);
 	if (!possessedTank) return;
 	possessedTank->SetMaxHealth(MaxHealth);
-	auto AimingComponent = possessedTank->FindComponentByClass<UTankAimingComponent>();
+	auto AimingComponent = possessedTank->FindComponentByClass<UMachineAimingComponent>();
 	if (!ensure(AimingComponent)) return;
 	AimingComponent->SetTimeToReload(TimeToReloadInSeconds);
 	EndedSetup();
 }
 
-void ATankAIController::Tick(float DeltaSeconds)
+void AMachineAIController::Tick(float DeltaSeconds)
 {
 	switch (TankAIState) {
-	case ETankAIState::Attacking:
+	case EMachineAIState::Attacking:
 		//TODO
 		AimAtPlayer();
 		break;
-	case ETankAIState::Suspicious:
+	case EMachineAIState::Suspicious:
 		//AimSuspiciously(); going around 90 - -90 degrees
 		break;
-	case ETankAIState::Patrolling:
+	case EMachineAIState::Patrolling:
 		//AimPatrolling(); forward
 		break;
 	}
 }
 
-void ATankAIController::SetState(ETankAIState state)
+void AMachineAIController::SetState(EMachineAIState state)
 {
 	TankAIState = state;
 }
 
-void ATankAIController::SetEnemy(AActor * enemy)
+void AMachineAIController::SetEnemy(AActor * enemy)
 {
 	this->Enemy = enemy;
 }
 
-void ATankAIController::AimAtPlayer() {
+void AMachineAIController::AimAtPlayer() {
 
 	auto ControlledTank = GetPawn();
 	if (Enemy && ControlledTank) {
 		MoveToActor(Enemy, AcceptanceRadius);
 		FVector HitLocation = Enemy->GetTransform().GetLocation();
 		LastSeenLocation = HitLocation;
-		auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+		auto AimingComponent = ControlledTank->FindComponentByClass<UMachineAimingComponent>();
 		if (!AimingComponent) return;
 		AimingComponent->AimAt(HitLocation);
 		UE_LOG(LogTemp, Warning, TEXT(" FIRE AIM AT PLAYER CALLED"));
@@ -84,13 +84,13 @@ void ATankAIController::AimAtPlayer() {
 	}
 }
 
-void ATankAIController::SetPawn(APawn * InPawn)
+void AMachineAIController::SetPawn(APawn * InPawn)
 {
 	Super::SetPawn(InPawn);
 	if (!InPawn) return;
-	auto possessedTank = Cast<ATank>(InPawn);
+	auto possessedTank = Cast<AMachine>(InPawn);
 	if (!ensure(possessedTank)) return;
-	possessedTank->OnDeathDelegate.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
+	possessedTank->OnDeathDelegate.AddUniqueDynamic(this, &AMachineAIController::OnTankDeath);
 }
 
 

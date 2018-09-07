@@ -7,7 +7,7 @@
 #include "WidgetAssociatedActor.h"
 #include "Tower.generated.h"
 
-class ATank;
+class AMachine;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAlarmDelegate, ATower*, Tower);
 
@@ -43,11 +43,11 @@ public:
 
 private:
 	//Spawn a tank at the mesh socket location
-	ATank* SpawnTank();
+	AMachine* SpawnTank();
 
 	UStaticMeshComponent * Mesh = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
-	TSubclassOf<ATank> TankToSpawn = nullptr;
+	TSubclassOf<AMachine> TankToSpawn = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
 	float TimeToSpawn = 5.f;
 	float LastTimeATankSpawned = 0.f;

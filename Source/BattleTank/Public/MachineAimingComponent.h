@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "TankAimingComponent.generated.h"
+#include "MachineAimingComponent.generated.h"
 
 UENUM()
 enum class EFiringState : uint8 {
@@ -14,8 +14,8 @@ enum class EFiringState : uint8 {
 	OutOfAmmo
 };
 
-class UTankBarrel;
-class UTankTurret;
+class UMachineBarrel;
+class UMachineTurret;
 class AProjectile;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFireDelegate);
@@ -23,15 +23,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFireDelegate);
 
 //Holds parameters for barrel's properties
 UCLASS( meta=(BlueprintSpawnableComponent) )
-class BATTLETANK_API UTankAimingComponent : public UActorComponent
+class BATTLETANK_API UMachineAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UTankAimingComponent();
+	UMachineAimingComponent();
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+	void Initialise(UMachineBarrel* BarrelToSet, UMachineTurret* TurretToSet);
 	void AimAt(FVector AimLocation);
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void Fire();
@@ -72,8 +72,8 @@ private:
 	TSubclassOf<AProjectile> Projectile = nullptr;
 	//Used to check for the aiming FiringState
 	FVector AimDirection = FVector();
-	UTankBarrel* Barrel = nullptr;
-	UTankTurret* Turret = nullptr;
+	UMachineBarrel* Barrel = nullptr;
+	UMachineTurret* Turret = nullptr;
 	//Used to redirect the barrel to the aim point	
 	void MoveBarrelTowards(FVector Direction);	
 };

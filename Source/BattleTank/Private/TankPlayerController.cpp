@@ -1,16 +1,16 @@
 #include "TankPlayerController.h"
-#include "Tank.h"
-#include "TankAimingComponent.h"
+#include "Machine.h"
+#include "MachineAimingComponent.h"
 #include "Engine/World.h"
 
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	auto possessedTank = Cast<ATank>(GetPawn());
+	auto possessedTank = Cast<AMachine>(GetPawn());
 	if (!ensure(possessedTank)) return;
 	possessedTank->SetMaxHealth(MaxHealth);
-	auto aimingComponent = possessedTank->FindComponentByClass<UTankAimingComponent>();
+	auto aimingComponent = possessedTank->FindComponentByClass<UMachineAimingComponent>();
 	if (!ensure(aimingComponent)) return;
 	aimingComponent->SetTimeToReload(TimeToReloadInSeconds);
 	FoundAimingComponent(aimingComponent);
@@ -28,7 +28,7 @@ void ATankPlayerController::AimAtCrosshair() {
 	FVector HitLocation;
 	auto ControlledTank = GetPawn();
 	if (!ControlledTank) return;
-	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+	auto AimingComponent = ControlledTank->FindComponentByClass<UMachineAimingComponent>();
 	if (!ensure(AimingComponent))
 		return; 
 	if (GetCrosshairLocation(HitLocation)) {
@@ -65,7 +65,7 @@ void ATankPlayerController::SetPawn(APawn * InPawn)
 {
 	Super::SetPawn(InPawn);
 	if (!InPawn) return;
-	auto possessedTank = Cast<ATank>(InPawn);
+	auto possessedTank = Cast<AMachine>(InPawn);
 	if (!ensure(possessedTank)) return;
 	possessedTank->OnDeathDelegate.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
 

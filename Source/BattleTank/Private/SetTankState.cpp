@@ -3,7 +3,7 @@
 #include "SetTankState.h"
 
 EBTNodeResult::Type USetTankState::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) {
-	auto tankControllerAI = Cast<ATankAIController>(OwnerComp.GetAIOwner());
+	auto tankControllerAI = Cast<AMachineAIController>(OwnerComp.GetAIOwner());
 	tankControllerAI->SetState(StateToSet);
 	return EBTNodeResult::Succeeded;
 }

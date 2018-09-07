@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "TankAIController.generated.h"
+#include "MachineAIController.generated.h"
 
 
 UENUM()
-enum class ETankAIState : uint8 {
+enum class EMachineAIState : uint8 {
 	Attacking,
 	Suspicious,
 	Patrolling
@@ -20,13 +20,13 @@ class AActor;
  * 
  */
 UCLASS()
-class BATTLETANK_API ATankAIController : public AAIController
+class BATTLETANK_API AMachineAIController : public AAIController
 {
 	GENERATED_BODY()
 	
 public:
 	virtual void BeginPlay() override;	
-	ATankAIController();
+	AMachineAIController();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void EndedSetup();
 	float GetAcceptanceRadius();
@@ -35,7 +35,7 @@ public:
 	(
 		float DeltaSeconds
 	) override;
-	void SetState(ETankAIState state);
+	void SetState(EMachineAIState state);
 	void SetEnemy(AActor* enemy);
 private:
 	void AimAtPlayer();
@@ -51,7 +51,7 @@ private:
 
 	//////////////////////////////////////////////////////////
 	//AI Properties
-	ETankAIState TankAIState = ETankAIState::Patrolling;
+	EMachineAIState TankAIState = EMachineAIState::Patrolling;
 	AActor* Enemy = nullptr;
 	FVector LastSeenLocation = FVector();
 	

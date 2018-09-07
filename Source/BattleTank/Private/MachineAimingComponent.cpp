@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TankAimingComponent.h"
-#include "TankBarrel.h"
-#include "TankTurret.h"
+#include "MachineAimingComponent.h"
+#include "MachineBarrel.h"
+#include "MachineTurret.h"
 #include "Projectile.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Engine/World.h"
@@ -11,19 +11,19 @@
 #include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
-UTankAimingComponent::UTankAimingComponent()
+UMachineAimingComponent::UMachineAimingComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UTankAimingComponent::Initialise(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)
+void UMachineAimingComponent::Initialise(UMachineBarrel * BarrelToSet, UMachineTurret * TurretToSet)
 {
 	Barrel = BarrelToSet;
 	Turret = TurretToSet;
 }
 
 // Called when the game starts
-void UTankAimingComponent::BeginPlay()
+void UMachineAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentAmmo = MaxAmmo;
@@ -31,7 +31,7 @@ void UTankAimingComponent::BeginPlay()
 		FiringState = EFiringState::OutOfAmmo;
 }
 
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+void UMachineAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
 	if (!Barrel || FiringState == EFiringState::OutOfAmmo) return;
 
@@ -46,7 +46,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	}
 }
 
-void UTankAimingComponent::AimAt(FVector AimLocation)
+void UMachineAimingComponent::AimAt(FVector AimLocation)
 {
 	if (!Barrel) return;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -59,7 +59,7 @@ void UTankAimingComponent::AimAt(FVector AimLocation)
 	
 }
 
-void UTankAimingComponent::Fire()
+void UMachineAimingComponent::Fire()
 {
 	if (!Barrel) return;
 	const UStaticMeshSocket * projectileSocket = Barrel->GetSocketByName("Projectile");
@@ -92,28 +92,28 @@ void UTankAimingComponent::Fire()
 	}
 }
 
-const int32 UTankAimingComponent::GetCurrentAmmo()
+const int32 UMachineAimingComponent::GetCurrentAmmo()
 {
 	return CurrentAmmo;
 }
 
-void UTankAimingComponent::SetMaxAmmo(int32 MaxAmmo)
+void UMachineAimingComponent::SetMaxAmmo(int32 MaxAmmo)
 {
 	this->MaxAmmo = MaxAmmo;
 	CurrentAmmo = MaxAmmo;
 }
 
-void UTankAimingComponent::SetTimeToReload(float timeToReloadInSeconds)
+void UMachineAimingComponent::SetTimeToReload(float timeToReloadInSeconds)
 {
 	TimeToReloadInSeconds = timeToReloadInSeconds;
 }
 
-const EFiringState UTankAimingComponent::GetFiringState()
+const EFiringState UMachineAimingComponent::GetFiringState()
 {
 	return FiringState;
 }
 
-void UTankAimingComponent::MoveBarrelTowards(FVector Direction)
+void UMachineAimingComponent::MoveBarrelTowards(FVector Direction)
 {
 	if (!ensure(Barrel)) return;
 	if (!ensure(Turret)) return;

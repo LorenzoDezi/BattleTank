@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "WidgetAssociatedActor.h"
-#include "Tank.generated.h"
+#include "Machine.generated.h"
 
-class UTankAimingComponent;
+class UMachineAimingComponent;
 class UTankMovementComponent;
 class UPatrolRouteComponent;
 class USoundBase;
@@ -18,12 +18,12 @@ class AProjectile;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
 
 UCLASS()
-class BATTLETANK_API ATank : public APawn, public IWidgetAssociatedActor
+class BATTLETANK_API AMachine : public APawn, public IWidgetAssociatedActor
 {
 	GENERATED_BODY()
 public:
 	// Sets default values for this pawn's properties
-	ATank();
+	AMachine();
 	virtual float TakeDamage
 	(
 		float DamageAmount,

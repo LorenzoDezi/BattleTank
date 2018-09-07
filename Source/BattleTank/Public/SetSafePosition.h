@@ -4,13 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "SetWaypointToResetBadPosition.generated.h"
-
+#include "SetSafePosition.generated.h"
 /**
  * 
  */
 UCLASS()
-class BATTLETANK_API USetWaypointToResetBadPosition : public UBTTaskNode
+class BATTLETANK_API USetSafePosition : public UBTTaskNode
 {
 	GENERATED_BODY()
 public:
