@@ -20,7 +20,7 @@ AMachineAIController::AMachineAIController()
 }
 
 void AMachineAIController::OnTankDeath() {
-	
+
 	GetPawn()->DetachFromControllerPendingDestroy();
 }
 
