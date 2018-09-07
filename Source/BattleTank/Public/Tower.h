@@ -42,8 +42,9 @@ public:
 	) override;
 
 private:
-	//Spawn a 0 at the mesh socket location
+	//Spawn a tank at the mesh socket location
 	ATank* SpawnTank();
+
 	UStaticMeshComponent * Mesh = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
 	TSubclassOf<ATank> TankToSpawn = nullptr;

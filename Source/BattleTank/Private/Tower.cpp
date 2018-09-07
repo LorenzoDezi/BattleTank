@@ -30,8 +30,11 @@ void ATower::OnTankDeath()
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!Mesh || !TankToSpawn || NumberOfTanksSpawned > MaxTanks || GetWorld()->GetTimeSeconds() + TimeToSpawn > LastTimeATankSpawned) return;
+	if (!Health || !Mesh || !TankToSpawn || NumberOfTanksSpawned > MaxTanks 
+		|| GetWorld()->GetTimeSeconds() < LastTimeATankSpawned + TimeToSpawn) 
+		return;
 	auto tankSpawned = SpawnTank();
+	if (!tankSpawned) return;
 	tankSpawned->OnDeathDelegate.AddDynamic(this, &ATower::OnTankDeath);
 	NumberOfTanksSpawned++;
 	LastTimeATankSpawned = GetWorld()->GetTimeSeconds();
@@ -72,6 +75,8 @@ ATank* ATower::SpawnTank()
 	FVector Location = Mesh->GetSocketLocation(FName("TankSpawn"));
 	FRotator Rotation = Mesh->GetSocketRotation(FName("TankSpawn"));
 	ATank* tankSpawned = GetWorld()->SpawnActor<ATank>(TankToSpawn, Location, Rotation);
+	if (!tankSpawned) return nullptr;
+	tankSpawned->Tags.Add(FName("Enemy"));
 	OnAlarmDelegate.AddDynamic(tankSpawned, &ATank::OnMotherTowerAlarm);
 	return tankSpawned;
 }

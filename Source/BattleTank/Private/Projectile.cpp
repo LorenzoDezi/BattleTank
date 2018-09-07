@@ -71,7 +71,5 @@ void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor,
 	MeshComponent->DestroyComponent();
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AProjectile::SelfDestroy, DestroyDelayAfterHit, false);
-
-	
 }
 

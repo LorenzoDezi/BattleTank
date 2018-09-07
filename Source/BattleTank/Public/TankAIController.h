@@ -30,6 +30,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void EndedSetup();
 	float GetAcceptanceRadius();
+	virtual void Possess(APawn* pawn) override;
 	virtual void Tick
 	(
 		float DeltaSeconds

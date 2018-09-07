@@ -11,13 +11,7 @@
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	auto possessedTank = Cast<ATank>(GetPawn());
-	if (!ensure(possessedTank)) return;
-	possessedTank->SetMaxHealth(MaxHealth);
-	auto AimingComponent = possessedTank->FindComponentByClass<UTankAimingComponent>();
-	if (!ensure(AimingComponent)) return;
-	AimingComponent->SetTimeToReload(TimeToReloadInSeconds);
-	EndedSetup();
+	
 }
 
 ATankAIController::ATankAIController()
@@ -33,6 +27,18 @@ void ATankAIController::OnTankDeath() {
 float ATankAIController::GetAcceptanceRadius()
 {
 	return AcceptanceRadius;
+}
+
+void ATankAIController::Possess(APawn * pawn)
+{
+	Super::Possess(pawn);
+	auto possessedTank = Cast<ATank>(pawn);
+	if (!possessedTank) return;
+	possessedTank->SetMaxHealth(MaxHealth);
+	auto AimingComponent = possessedTank->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) return;
+	AimingComponent->SetTimeToReload(TimeToReloadInSeconds);
+	EndedSetup();
 }
 
 void ATankAIController::Tick(float DeltaSeconds)
