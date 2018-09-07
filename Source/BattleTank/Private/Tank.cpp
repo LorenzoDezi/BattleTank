@@ -87,7 +87,7 @@ void ATank::SetMaxHealth(int32 MaxHealth)
 	Health = MaxHealth;
 }
 
-float ATank::GetHealthPercent() const
+float ATank::GetHealthPercent_Implementation() const
 {
 	return (float)Health / (float)MaxHealth;
 }

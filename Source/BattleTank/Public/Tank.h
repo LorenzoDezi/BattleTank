@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "WidgetAssociatedActor.h"
 #include "Tank.generated.h"
 
 class UTankAimingComponent;
@@ -17,7 +18,7 @@ class AProjectile;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
 
 UCLASS()
-class BATTLETANK_API ATank : public APawn
+class BATTLETANK_API ATank : public APawn, public IWidgetAssociatedActor
 {
 	GENERATED_BODY()
 public:
@@ -34,8 +35,9 @@ public:
 	void OnMotherTowerAlarm(ATower* tower);
 	void BeginPlay() override;
 	void SetMaxHealth(int32 MaxHealth);
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Health")
 	float GetHealthPercent() const;
+	virtual float GetHealthPercent_Implementation() const;	
 	UFUNCTION(BlueprintPure)
 	int32 GetCurrentBoosts() const;
 	FDeathDelegate OnDeathDelegate;

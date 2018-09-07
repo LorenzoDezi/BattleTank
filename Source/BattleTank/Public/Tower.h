@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WidgetAssociatedActor.h"
 #include "Tower.generated.h"
 
 class ATank;
@@ -11,7 +12,7 @@ class ATank;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAlarmDelegate, ATower*, Tower);
 
 UCLASS()
-class BATTLETANK_API ATower : public AActor
+class BATTLETANK_API ATower : public AActor, public IWidgetAssociatedActor
 {
 	GENERATED_BODY()
 	
@@ -29,8 +30,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	FAlarmDelegate OnAlarmDelegate;
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Health")
 	float GetHealthPercent() const;
+	virtual float GetHealthPercent_Implementation() const;
 	virtual float TakeDamage
 	(
 		float DamageAmount,
@@ -40,7 +42,7 @@ public:
 	) override;
 
 private:
-	//Spawn a tank at the mesh socket location
+	//Spawn a 0 at the mesh socket location
 	ATank* SpawnTank();
 	UStaticMeshComponent * Mesh = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
@@ -51,6 +53,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
 	int32 MaxTanks = 5;
 	int32 NumberOfTanksSpawned = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Health")
 	int32 MaxHealth = 100;
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 Health = MaxHealth;

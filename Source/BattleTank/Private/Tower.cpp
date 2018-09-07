@@ -37,7 +37,7 @@ void ATower::Tick(float DeltaTime)
 	LastTimeATankSpawned = GetWorld()->GetTimeSeconds();
 }
 
-float ATower::GetHealthPercent() const
+float ATower::GetHealthPercent_Implementation() const
 {
 	return (float)Health / (float)MaxHealth;
 }
@@ -64,7 +64,6 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 			HasSpawnedEmergencyTank = true;
 		}
 	}
-	
 	return DamageApplied;
 }
 
