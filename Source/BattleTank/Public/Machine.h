@@ -49,9 +49,17 @@ public:
 
 private:
 	int32 MaxHealth = 100;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float SecondsToDestroyAfterDeath = 10.f;
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 Health = MaxHealth;
 	UPROPERTY(EditDefaultsOnly, Category = "Patrol")
 	UPatrolRouteComponent* PatrolComponent;
+	UFUNCTION()
+	//Destroy the object for setTimer use
+	void DestroyCall();
+	//Destroy all components and particles, and enable physics
+	//to give ragdoll effect to the defeated tank
+	void Disassemble();
 
 };

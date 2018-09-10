@@ -3,6 +3,7 @@
 #include "Projectile.h"
 #include "Tower.h"
 #include "Engine/World.h"
+#include "Runtime/Engine/Public/TimerManager.h"
 #include "Runtime/Engine/Classes/Components/AudioComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "MachineAIController.h"
@@ -11,6 +12,7 @@
 #include "MachineBarrel.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "MachineAimingComponent.h"
+#include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "MachineTurret.h"
 #include "TankMovementComponent.h"
 
@@ -44,9 +46,10 @@ float AMachine::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent,
 	}
 	//Apply damage
 	float DamageApplied = 0.f;
-	if (Health - DamageAmount < 0) {
+	if (Health - DamageAmount <= 0) {
 		DamageApplied = Health;
 		Health = 0;
+		Disassemble();
 	}
 	else  {
 		Health -= DamageAmount;
@@ -109,4 +112,34 @@ void AMachine::GetActorEyesViewPoint(FVector & OutLocation, FRotator & OutRotati
 	if (!Mesh->GetSocketByName(FName("ViewPoint"))) return Super::GetActorEyesViewPoint(OutLocation, OutRotation);
 	OutLocation = Mesh->GetSocketLocation(FName("ViewPoint"));
 	OutRotation = Mesh->GetSocketRotation(FName("ViewPoint"));
+}
+
+void AMachine::DestroyCall()
+{
+	if (this->IsValidLowLevel())
+		this->Destroy();
+}
+
+void AMachine::Disassemble()
+{
+	//Distruggo gli actors associati (SprungWheels)
+	TArray<AActor*> actors = TArray<AActor*>();
+	GetAttachedActors(actors);
+	for (AActor* actor : actors) {
+		actor->Destroy();
+	}
+	//Distruggo i particles associati 
+	TArray<UActorComponent*> particles
+		= GetComponentsByClass(UParticleSystemComponent::StaticClass());
+	for (UActorComponent* comp : particles) {
+		comp->DestroyComponent();
+	}
+	//Abilito la fisica sulle meshes
+	TArray<UActorComponent*> meshes = GetComponentsByClass(UStaticMeshComponent::StaticClass());
+	for (UActorComponent* mesh : meshes) {
+		Cast<UMeshComponent>(mesh)->SetSimulatePhysics(true);
+	}
+	//Distruggo l'attore dopo un tot TODO
+	FTimerHandle Timer;
+	GetWorldTimerManager().SetTimer(Timer, this, &AMachine::DestroyCall, SecondsToDestroyAfterDeath);
 }
