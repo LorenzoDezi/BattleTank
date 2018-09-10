@@ -3,6 +3,7 @@
 #include "Projectile.h"
 #include "Tower.h"
 #include "Engine/World.h"
+#include "Runtime/Engine/Classes/Components/AudioComponent.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "Runtime/Engine/Classes/Components/AudioComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -128,6 +129,13 @@ void AMachine::Disassemble()
 	for (AActor* actor : actors) {
 		actor->Destroy();
 	}
+	//Fermo il suono del motore
+	UAudioComponent* audioComp = FindComponentByClass<UAudioComponent>();
+	if(audioComp)
+		audioComp->Stop();
+	if (TankDestroyedSound)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankDestroyedSound,
+			GetActorLocation());
 	//Distruggo i particles associati 
 	TArray<UActorComponent*> particles
 		= GetComponentsByClass(UParticleSystemComponent::StaticClass());
