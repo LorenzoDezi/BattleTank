@@ -31,8 +31,13 @@ void APowerUp::Tick(float DeltaTime)
 		rotation.Yaw + DeltaTime * RotationDegreePerSecond,
 		rotation.Roll 
 	));
-	if (!GetEnabledPercent())
+	if (!enabled && !GetEnabledPercent()) {
 		enabled = true;
+		UStaticMeshComponent* mesh = FindComponentByClass<UStaticMeshComponent>();
+		if (mesh && enabledMaterial)
+			mesh->SetMaterial(0, enabledMaterial);
+	}
+	Super::Tick(DeltaTime);
 }
 
 void APowerUp::OnOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -49,6 +54,9 @@ void APowerUp::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 	}
 	LastTimeHit = GetWorld()->GetTimeSeconds();
 	enabled = false;
+	UStaticMeshComponent* mesh = FindComponentByClass<UStaticMeshComponent>();
+	if (mesh && disabledMaterial)
+		mesh->SetMaterial(0, disabledMaterial);
 }
 
 void APowerUp::PowerUp(AMachine * machine)

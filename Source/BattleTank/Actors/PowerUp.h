@@ -35,7 +35,9 @@ public:
 		bool bFromSweep,
 		const FHitResult & SweepResult);
 	//Returns the time remaining to enable the powerup, 0.0 means loaded.
+	UFUNCTION(BlueprintCallable, Category = "PowerUp")
 	float GetEnabledPercent();
+	UFUNCTION(BlueprintCallable, Category = "PowerUp")
 	bool IsEnabled();
 
 private:
@@ -44,6 +46,10 @@ private:
 	float LastTimeHit = 0.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float TimeToEnable = 10.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Appearance")
+	UMaterialInterface* disabledMaterial = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Appearance")
+	UMaterialInterface* enabledMaterial = nullptr;
 	bool enabled = true;
 	
 };
