@@ -33,9 +33,7 @@ void APowerUp::Tick(float DeltaTime)
 	));
 	if (!enabled && !GetEnabledPercent()) {
 		enabled = true;
-		UStaticMeshComponent* mesh = FindComponentByClass<UStaticMeshComponent>();
-		if (mesh && enabledMaterial)
-			mesh->SetMaterial(0, enabledMaterial);
+		SetMaterial(enabledMaterial);
 	}
 	Super::Tick(DeltaTime);
 }
@@ -48,15 +46,15 @@ void APowerUp::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 	const FHitResult & SweepResult)
 {
 	if (!enabled) return;
-	if (!OtherActor->ActorHasTag(FName("Enemy"))) {
+	if (!OtherActor->ActorHasTag(FName("Enemy")) && OtherActor->IsA<AMachine>()) {
+		
 		auto machine = Cast<AMachine>(OtherActor);
 		PowerUp(machine);
+		LastTimeHit = GetWorld()->GetTimeSeconds();
+		enabled = false;
+		SetMaterial(disabledMaterial);
 	}
-	LastTimeHit = GetWorld()->GetTimeSeconds();
-	enabled = false;
-	UStaticMeshComponent* mesh = FindComponentByClass<UStaticMeshComponent>();
-	if (mesh && disabledMaterial)
-		mesh->SetMaterial(0, disabledMaterial);
+	
 }
 
 void APowerUp::PowerUp(AMachine * machine)
@@ -74,5 +72,21 @@ float APowerUp::GetEnabledPercent()
 bool APowerUp::IsEnabled()
 {
 	return enabled;
+}
+
+void APowerUp::SetMaterial(UMaterialInterface * material)
+{
+	UStaticMeshComponent* mainMesh = FindComponentByClass<UStaticMeshComponent>();
+	if (mainMesh && material)
+		mainMesh->SetMaterial(0, material);
+	TArray<USceneComponent*> meshes = TArray<USceneComponent*>();
+	mainMesh->GetChildrenComponents(true, meshes);
+	for (auto mesh : meshes) {
+		if (mesh->IsA<UStaticMeshComponent>()) {
+			auto meshCasted = Cast<UStaticMeshComponent>(mesh);
+			if (material)
+				meshCasted->SetMaterial(0, material);
+		}
+	}
 }
 

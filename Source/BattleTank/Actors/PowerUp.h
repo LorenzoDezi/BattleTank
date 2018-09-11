@@ -51,5 +51,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Appearance")
 	UMaterialInterface* enabledMaterial = nullptr;
 	bool enabled = true;
+	void SetMaterial(UMaterialInterface* material);
 	
 };
