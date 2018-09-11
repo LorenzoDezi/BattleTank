@@ -2,6 +2,7 @@
 
 #include "PowerUp.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Machine.h"
 #include "Engine/World.h"
 
@@ -53,6 +54,8 @@ void APowerUp::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 		LastTimeHit = GetWorld()->GetTimeSeconds();
 		enabled = false;
 		SetMaterial(disabledMaterial);
+		if(SoundWhenPicked)
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), SoundWhenPicked, GetActorLocation());
 	}
 	
 }

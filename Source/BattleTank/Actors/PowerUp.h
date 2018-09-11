@@ -50,6 +50,8 @@ private:
 	UMaterialInterface* disabledMaterial = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Appearance")
 	UMaterialInterface* enabledMaterial = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundBase* SoundWhenPicked = nullptr;
 	bool enabled = true;
 	void SetMaterial(UMaterialInterface* material);
 	
