@@ -49,6 +49,7 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 {
 	//Broadcast the alarm to the tanks
 	OnAlarmDelegate.Broadcast(this);
+	UE_LOG(LogTemp, Warning, TEXT("ALARM - Alarm called from the tower"));
 	//The tower is already dead
 	if (!Health) {
 		return 0.f;

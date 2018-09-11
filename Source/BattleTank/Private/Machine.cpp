@@ -72,14 +72,18 @@ void AMachine::AimAt(FVector AimLocation)
 
 void AMachine::OnMotherTowerAlarm(ATower* tower)
 {
+	UE_LOG(LogTemp, Warning, TEXT("ALARM - Alarm responded"));
 	auto controller = this->GetController();
 	if (!controller) return;
+	UE_LOG(LogTemp, Warning, TEXT("ALARM - ControllerCheck"));
 	AMachineAIController* AIController = nullptr;
 	if (controller->IsA(AMachineAIController::StaticClass()))
 		AIController = Cast<AMachineAIController>(controller);
 	if (!AIController) return;
+	UE_LOG(LogTemp, Warning, TEXT("ALARM - CastCheck"));
 	auto Blackboard = AIController->GetBlackboardComponent();
 	if (!Blackboard) return;
+	UE_LOG(LogTemp, Warning, TEXT("ALARM - BlackBoardCheck"));
 	Blackboard->SetValueAsObject(FName("MotherTower"), tower);
 }
 

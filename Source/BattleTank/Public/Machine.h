@@ -32,6 +32,7 @@ public:
 		AActor * DamageCauser
 	) override;
 	void AimAt(FVector AimLocation);
+	UFUNCTION()
 	void OnMotherTowerAlarm(ATower* tower);
 	void BeginPlay() override;
 	void SetMaxHealth(int32 MaxHealth);
