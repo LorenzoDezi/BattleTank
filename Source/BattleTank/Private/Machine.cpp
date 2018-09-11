@@ -41,6 +41,12 @@ void AMachine::BeginPlay()
 float AMachine::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, 
 	AController * EventInstigator, AActor * DamageCauser)
 {
+	if (DamageCauser) {
+		//Refactor in a function
+		auto Blackboard = GetBlackboard();
+		if(!DamageCauser->ActorHasTag(FName("Enemy")) && Blackboard)
+			Blackboard->SetValueAsObject(FName("PlayerTank"), DamageCauser);
+	}
 	//The tank is already dead
 	if (!Health) {
 		return 0.f;
@@ -70,21 +76,11 @@ void AMachine::AimAt(FVector AimLocation)
 	}
 }
 
-void AMachine::OnMotherTowerAlarm(ATower* tower)
+void AMachine::OnMotherTowerAlarm(AActor* attacker)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ALARM - Alarm responded"));
-	auto controller = this->GetController();
-	if (!controller) return;
-	UE_LOG(LogTemp, Warning, TEXT("ALARM - ControllerCheck"));
-	AMachineAIController* AIController = nullptr;
-	if (controller->IsA(AMachineAIController::StaticClass()))
-		AIController = Cast<AMachineAIController>(controller);
-	if (!AIController) return;
-	UE_LOG(LogTemp, Warning, TEXT("ALARM - CastCheck"));
-	auto Blackboard = AIController->GetBlackboardComponent();
-	if (!Blackboard) return;
-	UE_LOG(LogTemp, Warning, TEXT("ALARM - BlackBoardCheck"));
-	Blackboard->SetValueAsObject(FName("MotherTower"), tower);
+	auto Blackboard = GetBlackboard();
+	if(Blackboard)
+		Blackboard->SetValueAsObject(FName("PlayerTank"), attacker);
 }
 
 
@@ -100,12 +96,12 @@ float AMachine::GetHealthPercent_Implementation() const
 	return (float)Health / (float)MaxHealth;
 }
 
-int32 AMachine::GetCurrentBoosts() const
+float AMachine::GetBoostPercent() const
 {
 	UTankMovementComponent* TankMovComp = FindComponentByClass<UTankMovementComponent>();
 	if (!TankMovComp) return 0;
 	else
-		return TankMovComp->GetCurrentBoosts();
+		return TankMovComp->GetBoostPercent();
 }
 
 void AMachine::GetActorEyesViewPoint(FVector & OutLocation, FRotator & OutRotation) const
@@ -154,4 +150,16 @@ void AMachine::Disassemble()
 	//Distruggo l'attore dopo un tot TODO
 	FTimerHandle Timer;
 	GetWorldTimerManager().SetTimer(Timer, this, &AMachine::DestroyCall, SecondsToDestroyAfterDeath);
+}
+
+UBlackboardComponent * AMachine::GetBlackboard()
+{
+	auto controller = this->GetController();
+	if (!controller) return nullptr;
+	AMachineAIController* AIController = nullptr;
+	if (controller->IsA(AMachineAIController::StaticClass()))
+		AIController = Cast<AMachineAIController>(controller);
+	if (!AIController) return nullptr;
+	auto Blackboard = AIController->GetBlackboardComponent();
+	return Blackboard;
 }

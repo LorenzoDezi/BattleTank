@@ -48,8 +48,7 @@ float ATower::GetHealthPercent_Implementation() const
 float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	//Broadcast the alarm to the tanks
-	OnAlarmDelegate.Broadcast(this);
-	UE_LOG(LogTemp, Warning, TEXT("ALARM - Alarm called from the tower"));
+	OnAlarmDelegate.Broadcast(DamageCauser);
 	//The tower is already dead
 	if (!Health) {
 		return 0.f;

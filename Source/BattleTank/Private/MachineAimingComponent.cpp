@@ -75,6 +75,7 @@ void UMachineAimingComponent::Fire()
 	if (projectileSocket->GetSocketTransform(transform, Barrel) 
 		&& FiringState != EFiringState::Reloading ) {
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(Projectile, transform);
+		projectile->SetTankWhoShot(GetOwner());
 		projectile->Launch(LaunchSpeed);
 		if(TankFire)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankFire,

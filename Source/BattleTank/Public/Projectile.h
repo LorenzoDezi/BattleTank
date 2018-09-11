@@ -23,6 +23,7 @@ public:
 	// Sets default values for this actor's properties
 	AProjectile();
 	void Launch(float Speed);
+	void SetTankWhoShot(AActor* tank);
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit);
 private:
@@ -40,6 +41,6 @@ private:
 	float DestroyDelayAfterHit = 2.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float HitDamage = 20.f;
-	
+	AActor* TankWhoShotThis = nullptr;
 	
 };

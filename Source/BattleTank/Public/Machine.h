@@ -12,6 +12,7 @@ class UTankMovementComponent;
 class UPatrolRouteComponent;
 class USoundBase;
 class UAudioComponent;
+class UBlackboardComponent;
 class ATower;
 class AProjectile;
 
@@ -33,14 +34,14 @@ public:
 	) override;
 	void AimAt(FVector AimLocation);
 	UFUNCTION()
-	void OnMotherTowerAlarm(ATower* tower);
+	void OnMotherTowerAlarm(AActor* attacker);
 	void BeginPlay() override;
 	void SetMaxHealth(int32 MaxHealth);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Health")
 	float GetHealthPercent() const;
 	virtual float GetHealthPercent_Implementation() const;	
 	UFUNCTION(BlueprintPure)
-	int32 GetCurrentBoosts() const;
+	float GetBoostPercent() const;
 	FDeathDelegate OnDeathDelegate;
 	virtual void GetActorEyesViewPoint
 	(
@@ -65,5 +66,6 @@ private:
 	//Destroy all components and particles, and enable physics
 	//to give ragdoll effect to the defeated tank
 	void Disassemble();
+	UBlackboardComponent* GetBlackboard();
 
 };

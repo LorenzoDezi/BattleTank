@@ -9,7 +9,7 @@
 
 class AMachine;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAlarmDelegate, ATower*, Tower);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAlarmDelegate, AActor*, Attacker);
 
 UCLASS()
 class BATTLETANK_API ATower : public AActor, public IWidgetAssociatedActor
@@ -23,6 +23,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UFUNCTION()
 	// Called when a tank spawned by this tower gets killed
 	void OnTankDeath();
 

@@ -27,7 +27,7 @@ public:
 	void IntendTurnLeft(float Throw);
 	UFUNCTION(BlueprintCallable, Category = Actions)
 	void Boost(float Throttle);
-	int32 GetCurrentBoosts() const;
+	float GetBoostPercent() const;
 	void BeginPlay() override;
 	virtual void TickComponent(
 		float DeltaTime,

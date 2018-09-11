@@ -74,9 +74,9 @@ void UTankMovementComponent::Boost(float Throttle) {
 	LastTimeUsedBoost = GetWorld()->GetTimeSeconds();
 }
 
-int32 UTankMovementComponent::GetCurrentBoosts() const
+float UTankMovementComponent::GetBoostPercent() const
 {
-	return NumberOfBoosts;
+	return (float) NumberOfBoosts/(float) MaxNumberOfBoosts;
 }
 
 void UTankMovementComponent::BeginPlay()

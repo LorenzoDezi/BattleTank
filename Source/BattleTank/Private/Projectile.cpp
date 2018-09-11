@@ -50,6 +50,11 @@ void AProjectile::Launch(float Speed)
 	ProjectileMovComponent->Activate();
 }
 
+void AProjectile::SetTankWhoShot(AActor * tank)
+{
+	TankWhoShotThis = tank;
+}
+
 void AProjectile::SelfDestroy() {
 	Destroy();
 }
@@ -66,7 +71,8 @@ void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor,
 		GetActorLocation(), 
 		ExplosionForce->Radius, 
 		UDamageType::StaticClass(), 
-		TArray<AActor*>());
+		TArray<AActor*>(),
+		TankWhoShotThis);
 
 	MeshComponent->DestroyComponent();
 	FTimerHandle TimerHandle;
