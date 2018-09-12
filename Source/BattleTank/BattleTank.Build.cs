@@ -9,7 +9,7 @@ public class BattleTank : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AIModule",
-            "GameplayTasks", "NavigationSystem" });
+            "GameplayTasks", "NavigationSystem", "ApexDestruction" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

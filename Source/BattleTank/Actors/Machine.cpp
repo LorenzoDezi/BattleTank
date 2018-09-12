@@ -83,6 +83,12 @@ void AMachine::OnMotherTowerAlarm(AActor* attacker)
 		Blackboard->SetValueAsObject(FName("PlayerTank"), attacker);
 }
 
+void AMachine::OnMotherTowerDeath()
+{
+	Health = 0;
+	Disassemble();
+}
+
 void AMachine::RecoverHealth()
 {
 	if (MaxHealth - Health < HealthRegen)
@@ -169,7 +175,7 @@ void AMachine::Disassemble()
 	for (UActorComponent* mesh : meshes) {
 		Cast<UMeshComponent>(mesh)->SetSimulatePhysics(true);
 	}
-	//Distruggo l'attore dopo un tot TODO
+	//Distruggo l'attore dopo un tot 
 	FTimerHandle Timer;
 	GetWorldTimerManager().SetTimer(Timer, this, &AMachine::DestroyCall, SecondsToDestroyAfterDeath);
 }

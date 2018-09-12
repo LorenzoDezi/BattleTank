@@ -2,6 +2,8 @@
 
 #include "Actors/Tower.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Public/TimerManager.h"
+#include "DestructibleComponent.h"
 #include "Engine/World.h"
 #include "Actors/Machine.h"
 
@@ -19,7 +21,7 @@ void ATower::BeginPlay()
 {
 	Super::BeginPlay();
 	Health = MaxHealth;
-	Mesh = FindComponentByClass<UStaticMeshComponent>();
+	DestructibleMesh = FindComponentByClass<UDestructibleComponent>();	
 }
 
 void ATower::OnTankDeath()
@@ -30,7 +32,7 @@ void ATower::OnTankDeath()
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!Health || !Mesh || !TankToSpawn || NumberOfTanksSpawned > MaxTanks 
+	if (!Health || !DestructibleMesh || !TankToSpawn || NumberOfTanksSpawned > MaxTanks 
 		|| GetWorld()->GetTimeSeconds() < LastTimeATankSpawned + TimeToSpawn) 
 		return;
 	auto tankSpawned = SpawnTank();
@@ -58,6 +60,19 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 	if (Health - DamageAmount < 0) {
 		DamageApplied = Health;
 		Health = 0;
+		OnDefeatDelegate.Broadcast();
+		//Distruggo l'attore dopo un tot 
+		FTimerHandle Timer;
+		GetWorldTimerManager().SetTimer(Timer, this, &ATower::DestroyCall, SecondsToDestroyAfterDeath);
+		if (DamageEvent.IsOfType(FPointDamageEvent::ClassID)) {
+			FPointDamageEvent* PointDamageEvent = (FPointDamageEvent*)&DamageEvent;
+			DestructibleMesh->ApplyDamage(MaxHealth, PointDamageEvent->HitInfo.Location, PointDamageEvent->ShotDirection, 10);
+
+		}
+		else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID)) {
+			FRadialDamageEvent* RadialDamageEvent = (FRadialDamageEvent*)&DamageEvent;
+			DestructibleMesh->ApplyDamage(MaxHealth, RadialDamageEvent->Origin, RadialDamageEvent->ComponentHits[0].Location, 10);
+		}
 	}
 	else {
 		Health -= DamageAmount;
@@ -72,12 +87,22 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 
 AMachine* ATower::SpawnTank()
 {
-	FVector Location = Mesh->GetSocketLocation(FName("TankSpawn"));
-	FRotator Rotation = Mesh->GetSocketRotation(FName("TankSpawn"));
+	TArray<UActorComponent*> spawnPoints = GetComponentsByTag(USceneComponent::StaticClass(), FName("TowerSpawn"));
+	if (!spawnPoints.Num()) return nullptr;
+	int32 randomIndexChosen = FMath::RandRange(0, spawnPoints.Num() - 1);
+	USceneComponent* chosenSpawn = Cast<USceneComponent>(spawnPoints[randomIndexChosen]);
+	FVector Location = chosenSpawn->GetComponentLocation();
+	FRotator Rotation = chosenSpawn->GetComponentRotation();
 	AMachine* tankSpawned = GetWorld()->SpawnActor<AMachine>(TankToSpawn, Location, Rotation);
 	if (!tankSpawned) return nullptr;
 	tankSpawned->Tags.Add(FName("Enemy"));
 	OnAlarmDelegate.AddDynamic(tankSpawned, &AMachine::OnMotherTowerAlarm);
+	OnDefeatDelegate.AddDynamic(tankSpawned, &AMachine::OnMotherTowerDeath);
 	return tankSpawned;
+}
+
+void ATower::DestroyCall()
+{
+	Destroy();
 }
 

@@ -35,6 +35,8 @@ public:
 	void AimAt(FVector AimLocation);
 	UFUNCTION()
 	void OnMotherTowerAlarm(AActor* attacker);
+	UFUNCTION()
+	void OnMotherTowerDeath();
 	void RecoverHealth();
 	void RecoverAmmo();
 	void StartQuadSpeed();

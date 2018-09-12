@@ -8,8 +8,11 @@
 #include "Tower.generated.h"
 
 class AMachine;
+class UDestructibleComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAlarmDelegate, AActor*, Attacker);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTowerDefeatDelegate);
+
 
 UCLASS()
 class BATTLETANK_API ATower : public AActor, public IWidgetAssociatedActor
@@ -31,6 +34,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	FAlarmDelegate OnAlarmDelegate;
+	FTowerDefeatDelegate OnDefeatDelegate;
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Health")
 	float GetHealthPercent() const;
 	virtual float GetHealthPercent_Implementation() const;
@@ -46,7 +50,7 @@ private:
 	//Spawn a tank at the mesh socket location
 	AMachine* SpawnTank();
 
-	UStaticMeshComponent * Mesh = nullptr;
+	UDestructibleComponent * DestructibleMesh = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
 	TSubclassOf<AMachine> TankToSpawn = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
@@ -59,5 +63,10 @@ private:
 	int32 MaxHealth = 100;
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 Health = MaxHealth;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float SecondsToDestroyAfterDeath = 10.f;
+	UFUNCTION()
+	//Destroy the object for setTimer use
+	void DestroyCall();
 	bool HasSpawnedEmergencyTank = false;
 };
