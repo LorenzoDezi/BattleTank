@@ -175,6 +175,9 @@ void AMachine::Disassemble()
 	for (UActorComponent* mesh : meshes) {
 		Cast<UMeshComponent>(mesh)->SetSimulatePhysics(true);
 	}
+	//Distruggo l'AI
+	auto controller = GetController();
+	if (controller) controller->Destroy();
 	//Distruggo l'attore dopo un tot 
 	FTimerHandle Timer;
 	GetWorldTimerManager().SetTimer(Timer, this, &AMachine::DestroyCall, SecondsToDestroyAfterDeath);

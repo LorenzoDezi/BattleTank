@@ -28,13 +28,15 @@ TArray<ASprungWheel*> UTankTrack::GetWheels() const
 	if (!spawnPointComponents.IsValidIndex(0)) return TArray<ASprungWheel*>();
 	TArray<ASprungWheel*> sprungWheels = TArray<ASprungWheel*>();
 	for (auto component : spawnPointComponents) {
-		USpawnPoint * spawnPoint = Cast<USpawnPoint>(component);
-		if (!spawnPoint) continue;
-		TArray<AActor*> actors = spawnPoint->GetActorsSpawned();
-		for (auto actor : actors) {
-			ASprungWheel* sprungWheel = Cast<ASprungWheel>(actor);
-			if (!sprungWheel) continue;
-			sprungWheels.Add(sprungWheel);
+		if (component && component->IsA<USpawnPoint>()) {
+			USpawnPoint * spawnPoint = Cast<USpawnPoint>(component);
+			TArray<AActor*> actors = spawnPoint->GetActorsSpawned();
+			for (auto actor : actors) {
+				if (actor && actor->IsA<ASprungWheel>()) {
+					ASprungWheel* sprungWheel = Cast<ASprungWheel>(actor);
+					sprungWheels.Add(sprungWheel);
+				}
+			}
 		}
 	}
 	return sprungWheels;

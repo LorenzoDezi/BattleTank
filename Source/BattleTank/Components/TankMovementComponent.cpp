@@ -33,7 +33,9 @@ void UTankMovementComponent::IntendTurnLeft(float Throw) {
 
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
 {
-	auto TankMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
+	auto owner = GetOwner();
+	if (!owner) return;
+	auto TankMesh = owner->FindComponentByClass<UStaticMeshComponent>();
 	if (!TankMesh) return;
 	auto CurrentDirection = TankMesh->GetForwardVector().GetSafeNormal();
 	auto DirectionToAssume = MoveVelocity.GetSafeNormal();
