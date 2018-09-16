@@ -60,6 +60,18 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 	if (Health - DamageAmount < 0) {
 		DamageApplied = Health;
 		Health = 0;
+		
+	}
+	else {
+		Health -= DamageAmount;
+		DamageApplied = DamageAmount;
+		if (Health <= MaxHealth / 4 && !HasSpawnedEmergencyTank) {
+			SpawnTank();
+			HasSpawnedEmergencyTank = true;
+		}
+	}
+	//Dopo l'ultimo danno, la torre è morta
+	if (!Health) {
 		OnDefeatDelegate.Broadcast();
 		//Distruggo l'attore dopo un tot 
 		FTimerHandle Timer;
@@ -72,14 +84,6 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 		else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID)) {
 			FRadialDamageEvent* RadialDamageEvent = (FRadialDamageEvent*)&DamageEvent;
 			DestructibleMesh->ApplyDamage(MaxHealth, RadialDamageEvent->Origin, RadialDamageEvent->ComponentHits[0].Location, 10);
-		}
-	}
-	else {
-		Health -= DamageAmount;
-		DamageApplied = DamageAmount;
-		if (Health <= MaxHealth / 4 && !HasSpawnedEmergencyTank) {
-			SpawnTank();
-			HasSpawnedEmergencyTank = true;
 		}
 	}
 	return DamageApplied;
