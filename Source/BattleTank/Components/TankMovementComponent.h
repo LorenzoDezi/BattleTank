@@ -54,4 +54,9 @@ private:
 	USoundBase* TankBoost = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Boost")
 	USoundBase* TankBoostEmpty = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "AISteer")
+	float HitDangerDistance = 15000.f;
+	UPROPERTY(EditDefaultsOnly, Category = "AISteer")
+	float SteerFactor = 1.f;
+
 };

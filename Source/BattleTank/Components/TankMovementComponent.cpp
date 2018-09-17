@@ -39,9 +39,19 @@ void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, boo
 	if (!TankMesh) return;
 	auto CurrentDirection = TankMesh->GetForwardVector().GetSafeNormal();
 	auto DirectionToAssume = MoveVelocity.GetSafeNormal();
-
+	
 	auto ForwardThrow = FVector::DotProduct(CurrentDirection, DirectionToAssume);
 	auto RightThrow = FVector::CrossProduct(CurrentDirection, DirectionToAssume).Z;
+	FHitResult OutHit;
+	//Refactor TODO
+	if (GetWorld()->LineTraceSingleByChannel(OutHit, GetActorLocation(),
+		GetActorLocation() + CurrentDirection * HitDangerDistance,
+		ECollisionChannel::ECC_Visibility) && OutHit.GetActor()) {
+		if (RightThrow > 0)
+			RightThrow += SteerFactor / OutHit.Distance;
+		else
+			RightThrow -= SteerFactor / OutHit.Distance;
+	}
 	if (FMath::Abs(ForwardThrow) > FMath::Abs(RightThrow)) {
 		IntendMoveForward(ForwardThrow);
 		RightThrow /= 2;
