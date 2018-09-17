@@ -39,6 +39,8 @@ public:
 	void SetEnemy(AActor* enemy);
 private:
 	void AimAtPlayer();
+	void AimSuspiciously();
+	void AimPatrolling();
 	UFUNCTION()
 	void OnTankDeath();
 	virtual void SetPawn(APawn* InPawn) override;

@@ -33,6 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialise(UMachineBarrel* BarrelToSet, UMachineTurret* TurretToSet);
 	void AimAt(FVector AimLocation);
+	void AimSuspiciously();
+	void RotateTurretTowards(FVector Direction);
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void Fire();
 	UFUNCTION(BlueprintPure, Category = "Info")

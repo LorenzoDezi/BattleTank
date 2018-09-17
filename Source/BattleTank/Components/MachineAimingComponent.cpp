@@ -161,3 +161,14 @@ void UMachineAimingComponent::CheckAim(float TimeToReloadInSeconds)
 	}
 }
 
+void UMachineAimingComponent::AimSuspiciously()
+{
+	Turret->RotateSuspiciously();
+}
+
+void UMachineAimingComponent::RotateTurretTowards(FVector Direction)
+{
+	Turret->RotateTowards(Direction);
+}
+
+

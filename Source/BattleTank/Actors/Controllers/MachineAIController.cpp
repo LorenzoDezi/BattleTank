@@ -45,14 +45,13 @@ void AMachineAIController::Tick(float DeltaSeconds)
 {
 	switch (TankAIState) {
 	case EMachineAIState::Attacking:
-		//TODO
 		AimAtPlayer();
 		break;
 	case EMachineAIState::Suspicious:
-		//AimSuspiciously(); going around 90 - -90 degrees
+		AimSuspiciously();
 		break;
 	case EMachineAIState::Patrolling:
-		//AimPatrolling(); forward
+		AimPatrolling();
 		break;
 	}
 }
@@ -83,6 +82,25 @@ void AMachineAIController::AimAtPlayer() {
 		} 
 	}
 }
+
+void AMachineAIController::AimSuspiciously() {
+
+	auto ControlledTank = GetPawn();
+	if (!ControlledTank) return;
+	auto AimingComponent = ControlledTank->FindComponentByClass<UMachineAimingComponent>();
+	if (!AimingComponent) return;
+	AimingComponent->AimSuspiciously();
+}
+
+void AMachineAIController::AimPatrolling() {
+	auto ControlledTank = GetPawn();
+	if (!ControlledTank) return;
+	auto AimingComponent = ControlledTank->FindComponentByClass<UMachineAimingComponent>();
+	if (!AimingComponent) return;
+	if(!GetPawn()) return
+	AimingComponent->RotateTurretTowards(GetPawn()->GetActorForwardVector());
+}
+
 
 void AMachineAIController::SetPawn(APawn * InPawn)
 {

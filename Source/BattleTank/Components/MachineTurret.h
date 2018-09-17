@@ -15,8 +15,11 @@ class BATTLETANK_API UMachineTurret : public UStaticMeshComponent
 	GENERATED_BODY()
 public:
 	void Rotate(float RelativeSpeed);
+	void RotateSuspiciously();
+	void RotateTowards(FVector Direction);
 
 private:
 	float MaxDegreesPerSecond = 30.f;
+	bool IsSuspiciouslyRotatingToNinetyDeg = false;
 
 };
