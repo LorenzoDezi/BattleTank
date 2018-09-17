@@ -19,6 +19,7 @@ public:
 	void RotateTowards(FVector Direction);
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float MaxDegreesPerSecond = 30.f;
 	bool IsSuspiciouslyRotatingToNinetyDeg = false;
 

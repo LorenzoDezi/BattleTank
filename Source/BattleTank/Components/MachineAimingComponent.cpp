@@ -135,16 +135,9 @@ void UMachineAimingComponent::MoveBarrelTowards(FVector Direction)
 	if (!ensure(Turret)) return;
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotator = Direction.Rotation();
-
 	auto DeltaRotator_1 = AimAsRotator - BarrelRotator;
-	if (FMath::Abs(DeltaRotator_1.Yaw) > 180) {
-		Turret->Rotate(-DeltaRotator_1.Yaw);
-	}
-	else {
-		Turret->Rotate(DeltaRotator_1.Yaw);
-
-	}
-
+	float direction = FVector::DotProduct(Turret->GetUpVector(),FVector::CrossProduct(Turret->GetForwardVector(), Direction));
+	Turret->Rotate(direction);
 	Barrel->Elevate(DeltaRotator_1.Pitch);
 }
 
