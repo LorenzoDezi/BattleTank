@@ -33,6 +33,7 @@ void UMachineAimingComponent::BeginPlay()
 
 void UMachineAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
+	if (CurrentAmmo != 0 && FiringState == EFiringState::OutOfAmmo) FiringState = EFiringState::Aiming;
 	if (!Barrel || FiringState == EFiringState::OutOfAmmo) return;
 	if (IsQuadSpeed) {
 		CheckAim(TimeToReloadInSeconds / 4.f);
@@ -106,10 +107,11 @@ void UMachineAimingComponent::SetMaxAmmo(int32 MaxAmmo)
 
 void UMachineAimingComponent::RecoverAmmo(int32 AmmoRegen)
 {
-	if (MaxAmmo - CurrentAmmo < AmmoRegen)
+	if (CurrentAmmo + AmmoRegen < MaxAmmo)
 		CurrentAmmo += AmmoRegen;
 	else
 		CurrentAmmo = MaxAmmo;
+	OnFireDelegate.Broadcast();
 }
 
 void UMachineAimingComponent::StartQuadSpeed(float MaxTimeQuadSpeed)
@@ -124,6 +126,34 @@ void UMachineAimingComponent::SetTimeToReload(float timeToReloadInSeconds)
 	TimeToReloadInSeconds = timeToReloadInSeconds;
 }
 
+//TODO: Feature, implementare un calcolo del nemico in traiettoria
+bool UMachineAimingComponent::IsEnemyInTrajectory(FVector AimLocation)
+{
+	if (!Barrel) return false;
+	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
+	FVector OutVelocity;
+	if (UGameplayStatics::SuggestProjectileVelocity(this, OutVelocity, StartLocation,
+		AimLocation, LaunchSpeed, false, 0.f, 0.f, ESuggestProjVelocityTraceOption::TraceFullPath)) {
+		AimDirection = OutVelocity.GetSafeNormal();
+		TArray<FHitResult> hits = TArray<FHitResult>();
+		GetWorld()->LineTraceMultiByChannel(
+			hits, StartLocation, 
+			AimDirection * LaunchSpeed * 100, 
+			ECollisionChannel::ECC_Visibility);
+		for (auto hit : hits) {
+			if (hit.GetActor()) {
+				if (hit.GetActor()->ActorHasTag(FName("Enemy"))) {
+					//TODO DEBUG
+					UE_LOG(LogTemp, Warning, TEXT("TRAJ Enemy %s"), *(hit.GetActor()->GetName()));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	return false;
+}
+
 const EFiringState UMachineAimingComponent::GetFiringState()
 {
 	return FiringState;
@@ -131,14 +161,16 @@ const EFiringState UMachineAimingComponent::GetFiringState()
 
 void UMachineAimingComponent::MoveBarrelTowards(FVector Direction)
 {
-	if (!ensure(Barrel)) return;
-	if (!ensure(Turret)) return;
+	if (!Barrel) return;
+	if (!Turret) return;
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotator = Direction.Rotation();
 	auto DeltaRotator_1 = AimAsRotator - BarrelRotator;
 	float direction = FVector::DotProduct(Turret->GetUpVector(),FVector::CrossProduct(Turret->GetForwardVector(), Direction));
 	Turret->Rotate(direction);
-	Barrel->Elevate(DeltaRotator_1.Pitch);
+	float elevation = -FVector::DotProduct(Barrel->GetRightVector(), FVector::CrossProduct(Barrel->GetForwardVector(), Direction));
+	UE_LOG(LogTemp, Warning, TEXT("BARREL - Elevation %f"), elevation);
+	Barrel->Elevate(elevation);
 }
 
 void UMachineAimingComponent::CheckAim(float TimeToReloadInSeconds)

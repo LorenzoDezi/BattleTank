@@ -50,6 +50,7 @@ float ATower::GetHealthPercent_Implementation() const
 float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	//Broadcast the alarm to the tanks
+	if (!(DamageCauser) || DamageCauser->ActorHasTag(FName("Enemy"))) return 0.f;
 	OnAlarmDelegate.Broadcast(DamageCauser);
 	//The tower is already dead
 	if (!Health) {
@@ -99,7 +100,6 @@ AMachine* ATower::SpawnTank()
 	FRotator Rotation = chosenSpawn->GetComponentRotation();
 	AMachine* tankSpawned = GetWorld()->SpawnActor<AMachine>(TankToSpawn, Location, Rotation);
 	if (!tankSpawned) return nullptr;
-	tankSpawned->Tags.Add(FName("Enemy"));
 	OnAlarmDelegate.AddDynamic(tankSpawned, &AMachine::OnMotherTowerAlarm);
 	OnDefeatDelegate.AddDynamic(tankSpawned, &AMachine::OnMotherTowerDeath);
 	return tankSpawned;

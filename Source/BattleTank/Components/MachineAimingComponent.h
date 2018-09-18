@@ -43,6 +43,7 @@ public:
 	void RecoverAmmo(int32 Ammo);
 	void StartQuadSpeed(float MaxTimeQuadSpeed);
 	void SetTimeToReload(float timeToReloadInSeconds);
+	bool IsEnemyInTrajectory(FVector AimLocation);
 	const EFiringState GetFiringState();
 
 protected:

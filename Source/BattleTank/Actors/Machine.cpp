@@ -44,8 +44,11 @@ float AMachine::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent,
 	if (DamageCauser) {
 		//Refactor in a function
 		auto Blackboard = GetBlackboard();
-		if(!DamageCauser->ActorHasTag(FName("Enemy")) && Blackboard)
+		if(!(DamageCauser->ActorHasTag(FName("Enemy"))) && Blackboard)
 			Blackboard->SetValueAsObject(FName("PlayerTank"), DamageCauser);
+		else if (Blackboard && DamageCauser->ActorHasTag("Enemy")) {
+			return 0.f;
+		}
 	}
 	//The tank is already dead
 	if (!Health) {
@@ -91,7 +94,7 @@ void AMachine::OnMotherTowerDeath()
 
 void AMachine::RecoverHealth()
 {
-	if (MaxHealth - Health < HealthRegen)
+	if (Health + HealthRegen < MaxHealth)
 		Health += HealthRegen;
 	else
 		Health = MaxHealth;
