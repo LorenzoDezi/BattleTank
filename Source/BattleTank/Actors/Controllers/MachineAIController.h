@@ -11,7 +11,8 @@ UENUM()
 enum class EMachineAIState : uint8 {
 	Attacking,
 	Suspicious,
-	Patrolling
+	Patrolling,
+	Dead
 };
 
 class AActor;
@@ -36,6 +37,7 @@ public:
 		float DeltaSeconds
 	) override;
 	void SetState(EMachineAIState state);
+	EMachineAIState GetState();
 	void SetEnemy(AActor* enemy);
 private:
 	void AimAtPlayer();
@@ -51,8 +53,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Game Variables")
 	float TimeToReloadInSeconds = 2.f;
 
-	//////////////////////////////////////////////////////////
-	//AI Properties
 	EMachineAIState TankAIState = EMachineAIState::Patrolling;
 	AActor* Enemy = nullptr;
 	FVector LastSeenLocation = FVector();

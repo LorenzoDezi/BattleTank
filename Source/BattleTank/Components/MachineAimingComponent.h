@@ -39,9 +39,14 @@ public:
 	void Fire();
 	UFUNCTION(BlueprintPure, Category = "Info")
 	const int32 GetCurrentAmmo();
+	void PrepareForQuadSpeed(float MaxTimeQuadSpeed);
+	UFUNCTION(BlueprintPure, Category = "Info")
+	const bool GetCanQuadSpeed();
+	UFUNCTION(BlueprintCallable, Category = "Actions")
+	void StartQuadSpeed();
+
 	void SetMaxAmmo(int32 MaxAmmo);
 	void RecoverAmmo(int32 Ammo);
-	void StartQuadSpeed(float MaxTimeQuadSpeed);
 	void SetTimeToReload(float timeToReloadInSeconds);
 	bool IsEnemyInTrajectory(FVector AimLocation);
 	const EFiringState GetFiringState();
@@ -67,6 +72,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	int32 MaxAmmo = -1;
 	int32 CurrentAmmo;
+	bool CanQuadSpeed = false;
 	bool IsQuadSpeed = false;
 	float LastTimeQuadSpeed = 0.f;
 	float MaxTimeQuadSpeed = 0.f;

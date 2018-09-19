@@ -5,5 +5,5 @@
 
 void AQuadSpeedPowerUp::PowerUp(AMachine * machine)
 {
-	machine->StartQuadSpeed();
+	machine->PrepareForQuadSpeed();
 }

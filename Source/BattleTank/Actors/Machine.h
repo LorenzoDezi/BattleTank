@@ -39,7 +39,7 @@ public:
 	void OnMotherTowerDeath();
 	void RecoverHealth();
 	void RecoverAmmo();
-	void StartQuadSpeed();
+	void PrepareForQuadSpeed();
 	void BeginPlay() override;
 	void SetMaxHealth(int32 MaxHealth);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Health")

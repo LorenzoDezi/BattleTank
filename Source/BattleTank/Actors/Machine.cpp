@@ -107,11 +107,11 @@ void AMachine::RecoverAmmo()
 		AimComp->RecoverAmmo(AmmoRegen);
 }
 
-void AMachine::StartQuadSpeed()
+void AMachine::PrepareForQuadSpeed()
 {
 	auto AimComp = this->FindComponentByClass<UMachineAimingComponent>();
 	if (AimComp)
-		AimComp->StartQuadSpeed(MaxTimeQuadSpeed);
+		AimComp->PrepareForQuadSpeed(MaxTimeQuadSpeed);
 }
 
 
@@ -180,6 +180,8 @@ void AMachine::Disassemble()
 	}
 	//Distruggo l'AI
 	auto controller = GetController();
+	if (controller->IsA<AMachineAIController>())
+		Cast<AMachineAIController>(controller)->SetState(EMachineAIState::Dead);
 	if (controller) controller->Destroy();
 	//Distruggo l'attore dopo un tot 
 	FTimerHandle Timer;

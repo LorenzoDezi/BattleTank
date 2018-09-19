@@ -2,6 +2,7 @@
 
 #include "Actors/Controllers/MachineAIController.h"
 #include "Actors/Machine.h"
+#include "BattleTankGameModeBase.h"
 #include "Engine/World.h"
 #include "Components/MachineAimingComponent.h"
 #include "Components/ActorComponent.h"
@@ -58,7 +59,23 @@ void AMachineAIController::Tick(float DeltaSeconds)
 
 void AMachineAIController::SetState(EMachineAIState state)
 {
+	auto gameMode = GetWorld()->GetAuthGameMode();
+	ABattleTankGameModeBase* battleTankMode = nullptr;
+	if (gameMode->IsA<ABattleTankGameModeBase>()) {
+		battleTankMode = Cast<ABattleTankGameModeBase>(gameMode);
+		if (GetState() == EMachineAIState::Attacking && state != EMachineAIState::Attacking) {
+			battleTankMode->DecrementEnemiesAttacking();
+		}
+		else if (GetState() != EMachineAIState::Attacking && state == EMachineAIState::Attacking) {
+			battleTankMode->IncrementEnemiesAttacking();
+		}
+	}
 	TankAIState = state;
+}
+
+EMachineAIState AMachineAIController::GetState()
+{
+	return TankAIState;
 }
 
 void AMachineAIController::SetEnemy(AActor * enemy)

@@ -99,6 +99,17 @@ const int32 UMachineAimingComponent::GetCurrentAmmo()
 	return CurrentAmmo;
 }
 
+void UMachineAimingComponent::PrepareForQuadSpeed(float MaxTimeQuadSpeed)
+{
+	CanQuadSpeed = true;
+	this->MaxTimeQuadSpeed = MaxTimeQuadSpeed;
+}
+
+const bool UMachineAimingComponent::GetCanQuadSpeed()
+{
+	return CanQuadSpeed;
+}
+
 void UMachineAimingComponent::SetMaxAmmo(int32 MaxAmmo)
 {
 	this->MaxAmmo = MaxAmmo;
@@ -114,11 +125,13 @@ void UMachineAimingComponent::RecoverAmmo(int32 AmmoRegen)
 	OnFireDelegate.Broadcast();
 }
 
-void UMachineAimingComponent::StartQuadSpeed(float MaxTimeQuadSpeed)
+void UMachineAimingComponent::StartQuadSpeed()
 {
+	if (!CanQuadSpeed) return;
 	IsQuadSpeed = true;
 	LastTimeQuadSpeed = GetWorld()->GetTimeSeconds();
-	this->MaxTimeQuadSpeed = MaxTimeQuadSpeed;
+	CanQuadSpeed = false;
+	//TODO: Add effects or sounds
 }
 
 void UMachineAimingComponent::SetTimeToReload(float timeToReloadInSeconds)
