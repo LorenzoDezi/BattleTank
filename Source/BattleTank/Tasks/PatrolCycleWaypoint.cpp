@@ -10,16 +10,17 @@ EBTNodeResult::Type UPatrolCycleWaypoint::ExecuteTask(UBehaviorTreeComponent & O
 {
 	//Setup the components we need
 	auto BlackboardComponent = OwnerComp.GetBlackboardComponent();
+	if (!BlackboardComponent) return EBTNodeResult::Failed;
 	auto Index = BlackboardComponent->GetValueAsInt(WaypointIndexKey.SelectedKeyName);
 	auto tankControllerAI = Cast<AMachineAIController>(OwnerComp.GetAIOwner());
 	auto pawn = tankControllerAI->GetPawn();
-	if (pawn == nullptr) return EBTNodeResult::Failed;
+	if (!pawn) return EBTNodeResult::Failed;
 	auto patrolRouteComponent = pawn->FindComponentByClass<UPatrolRouteComponent>();
-	if (patrolRouteComponent == nullptr) return EBTNodeResult::Failed;
+	if (!patrolRouteComponent) return EBTNodeResult::Failed;
 	
 	//Setting next waypoint on blackboard
 	auto nextWaypoint = patrolRouteComponent->GetPatrolPointAt(Index);
-	if (nextWaypoint == nullptr) return EBTNodeResult::Failed;
+	if (!nextWaypoint) return EBTNodeResult::Failed;
 	BlackboardComponent->SetValueAsObject(WaypointKey.SelectedKeyName, nextWaypoint);
 
 	//Cycle the waypoint index

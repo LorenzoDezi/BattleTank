@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/PatrolRouteComponent.h"
-
+#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UPatrolRouteComponent::UPatrolRouteComponent()
@@ -27,7 +27,14 @@ AActor * UPatrolRouteComponent::GetPatrolPointAt(int32 index)
 
 int32 UPatrolRouteComponent::GetNumberOfPatrolPoints()
 {
-	return PatrolPoints.Num();
+	int numberOfPatrols = 0;
+	for (AActor* patrol : PatrolPoints) {
+		if (patrol->IsValidLowLevel()) 
+			numberOfPatrols++;
+		else 
+			PatrolPoints.Remove(patrol);
+	}
+	return numberOfPatrols;
 }
 
 void UPatrolRouteComponent::SetPatrolPoints(TArray<AActor*> patrolPoints)
