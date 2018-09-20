@@ -42,6 +42,8 @@ public:
 	void PrepareForQuadSpeed(float MaxTimeQuadSpeed);
 	UFUNCTION(BlueprintPure, Category = "Info")
 	const bool GetCanQuadSpeed();
+	UFUNCTION(BlueprintPure, Category = "Info")
+	const bool GetIsQuadSpeed();
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void StartQuadSpeed();
 

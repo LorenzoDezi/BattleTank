@@ -18,7 +18,7 @@ public:
 	void BeginPlay() override;
 	virtual void Tick(float Deltaseconds) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
-	void FoundAimingComponent(UMachineAimingComponent* component);
+	void FoundComponents(UMachineAimingComponent* aimComp, UTankMovementComponent* movComp);
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void EndedSetup();
 

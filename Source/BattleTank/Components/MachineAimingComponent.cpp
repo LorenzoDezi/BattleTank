@@ -110,6 +110,11 @@ const bool UMachineAimingComponent::GetCanQuadSpeed()
 	return CanQuadSpeed;
 }
 
+const bool UMachineAimingComponent::GetIsQuadSpeed()
+{
+	return IsQuadSpeed;
+}
+
 void UMachineAimingComponent::SetMaxAmmo(int32 MaxAmmo)
 {
 	this->MaxAmmo = MaxAmmo;
@@ -182,7 +187,6 @@ void UMachineAimingComponent::MoveBarrelTowards(FVector Direction)
 	float direction = FVector::DotProduct(Turret->GetUpVector(),FVector::CrossProduct(Turret->GetForwardVector(), Direction));
 	Turret->Rotate(direction);
 	float elevation = -FVector::DotProduct(Barrel->GetRightVector(), FVector::CrossProduct(Barrel->GetForwardVector(), Direction));
-	UE_LOG(LogTemp, Warning, TEXT("BARREL - Elevation %f"), elevation);
 	Barrel->Elevate(elevation);
 }
 

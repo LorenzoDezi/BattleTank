@@ -5,7 +5,6 @@
 
 void UMachineTurret::Rotate(float RelativeSpeed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("TURRET Relative Speed: %f %s"), RelativeSpeed, *GetAttachmentRootActor()->GetName());
 	RelativeSpeed = FMath::Clamp(RelativeSpeed, -1.f, 1.f);
 	auto RotationDegrees = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
 	auto nextRotationDegree = RelativeRotation.Yaw + RotationDegrees;

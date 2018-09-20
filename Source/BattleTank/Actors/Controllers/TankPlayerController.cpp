@@ -1,6 +1,7 @@
 #include "Actors/Controllers/TankPlayerController.h"
 #include "Actors/Machine.h"
 #include "Components/MachineAimingComponent.h"
+#include "Components/TankMovementComponent.h"
 #include "Engine/World.h"
 
 
@@ -8,12 +9,13 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	auto possessedTank = Cast<AMachine>(GetPawn());
-	if (!ensure(possessedTank)) return;
+	if (!possessedTank) return;
 	possessedTank->SetMaxHealth(MaxHealth);
 	auto aimingComponent = possessedTank->FindComponentByClass<UMachineAimingComponent>();
-	if (!ensure(aimingComponent)) return;
+	auto movComponent = possessedTank->FindComponentByClass<UTankMovementComponent>();
+	if (!aimingComponent || !movComponent) return;
 	aimingComponent->SetTimeToReload(TimeToReloadInSeconds);
-	FoundAimingComponent(aimingComponent);
+	FoundComponents(aimingComponent, movComponent);
 	aimingComponent->SetMaxAmmo(MaxAmmo);
 	EndedSetup();
 }

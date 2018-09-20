@@ -80,6 +80,7 @@ void UTankMovementComponent::Boost(float Throttle) {
 	LeftTrack->Boost(Throttle);
 	RightTrack->Boost(Throttle);
 	NumberOfBoosts--;
+	OnBoostDelegate.Broadcast();
 	if (TankBoost && LeftTrack)
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), TankBoost,
 			LeftTrack->GetComponentLocation());

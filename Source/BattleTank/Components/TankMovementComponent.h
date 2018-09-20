@@ -9,6 +9,8 @@
 class UTankTrack;
 class USoundBase;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBoostDelegate);
+
 /**
  * 
  */
@@ -34,6 +36,8 @@ public:
 		ELevelTick TickType,
 		FActorComponentTickFunction * ThisTickFunction
 	) override;
+	UPROPERTY(BlueprintAssignable, Category = "Firing")
+	FBoostDelegate OnBoostDelegate;
 
 
 	void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
