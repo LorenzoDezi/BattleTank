@@ -115,6 +115,11 @@ const bool UMachineAimingComponent::GetIsQuadSpeed()
 	return IsQuadSpeed;
 }
 
+const float UMachineAimingComponent::GetAmmoPercent()
+{
+	return (float) CurrentAmmo / (float) MaxAmmo ;
+}
+
 void UMachineAimingComponent::SetMaxAmmo(int32 MaxAmmo)
 {
 	this->MaxAmmo = MaxAmmo;

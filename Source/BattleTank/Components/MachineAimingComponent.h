@@ -44,6 +44,8 @@ public:
 	const bool GetCanQuadSpeed();
 	UFUNCTION(BlueprintPure, Category = "Info")
 	const bool GetIsQuadSpeed();
+	UFUNCTION(BlueprintPure, Category = "Info")
+	const float GetAmmoPercent();
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void StartQuadSpeed();
 
