@@ -3,6 +3,7 @@
 #include "Actors/Tower.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Public/TimerManager.h"
+#include "BattleTankGameModeBase.h"
 #include "DestructibleComponent.h"
 #include "Engine/World.h"
 #include "Actors/Machine.h"
@@ -73,21 +74,30 @@ float ATower::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, A
 	}
 	//Dopo l'ultimo danno, la torre è morta
 	if (!Health) {
-		OnDefeatDelegate.Broadcast();
-		//Distruggo l'attore dopo un tot 
-		FTimerHandle Timer;
-		GetWorldTimerManager().SetTimer(Timer, this, &ATower::DestroyCall, SecondsToDestroyAfterDeath);
-		if (DamageEvent.IsOfType(FPointDamageEvent::ClassID)) {
-			FPointDamageEvent* PointDamageEvent = (FPointDamageEvent*)&DamageEvent;
-			DestructibleMesh->ApplyDamage(MaxHealth, PointDamageEvent->HitInfo.Location, PointDamageEvent->ShotDirection, 10);
-
-		}
-		else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID)) {
-			FRadialDamageEvent* RadialDamageEvent = (FRadialDamageEvent*)&DamageEvent;
-			DestructibleMesh->ApplyDamage(MaxHealth, RadialDamageEvent->Origin, RadialDamageEvent->ComponentHits[0].Location, 10);
-		}
+		TowerDeath(DamageEvent);
 	}
 	return DamageApplied;
+}
+
+void ATower::TowerDeath(const FDamageEvent & DamageEvent)
+{
+	OnDefeatDelegate.Broadcast();
+	auto gameMode = GetWorld()->GetAuthGameMode();
+	if (gameMode && gameMode->IsA<ABattleTankGameModeBase>()) {
+		Cast<ABattleTankGameModeBase>(gameMode)->TowerDefeated();
+	}
+	//Distruggo l'attore dopo un tot 
+	FTimerHandle Timer;
+	GetWorldTimerManager().SetTimer(Timer, this, &ATower::DestroyCall, SecondsToDestroyAfterDeath);
+	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID)) {
+		FPointDamageEvent* PointDamageEvent = (FPointDamageEvent*)&DamageEvent;
+		DestructibleMesh->ApplyDamage(MaxHealth, PointDamageEvent->HitInfo.Location, PointDamageEvent->ShotDirection, 10);
+
+	}
+	else if (DamageEvent.IsOfType(FRadialDamageEvent::ClassID)) {
+		FRadialDamageEvent* RadialDamageEvent = (FRadialDamageEvent*)&DamageEvent;
+		DestructibleMesh->ApplyDamage(MaxHealth, RadialDamageEvent->Origin, RadialDamageEvent->ComponentHits[0].Location, 10);
+	}
 }
 
 AMachine* ATower::SpawnTank()

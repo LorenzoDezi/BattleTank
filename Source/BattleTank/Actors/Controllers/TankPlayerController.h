@@ -8,6 +8,9 @@
 class ATank;
 class UMachineAimingComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FFoundComponents, UMachineAimingComponent*, AimingComp, UTankMovementComponent*, MovComp);
+
+
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
 {
@@ -17,8 +20,8 @@ public:
 	
 	void BeginPlay() override;
 	virtual void Tick(float Deltaseconds) override;
-	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
-	void FoundComponents(UMachineAimingComponent* aimComp, UTankMovementComponent* movComp);
+	UPROPERTY(BlueprintAssignable, Category = "Setup")
+	FFoundComponents FoundComponents;
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void EndedSetup();
 

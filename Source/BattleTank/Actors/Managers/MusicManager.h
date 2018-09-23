@@ -12,7 +12,9 @@ class UAudioComponent;
 UENUM()
 enum class EGameplayState : uint8 {
 	Fighting,
-	Exploring
+	Exploring,
+	GameOver,
+	Won
 };
 
 UCLASS()

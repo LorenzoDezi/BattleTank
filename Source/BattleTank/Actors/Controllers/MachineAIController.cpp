@@ -93,7 +93,6 @@ void AMachineAIController::AimAtPlayer() {
 		auto AimingComponent = ControlledTank->FindComponentByClass<UMachineAimingComponent>();
 		if (!AimingComponent) return;
 		AimingComponent->AimAt(HitLocation);
-		UE_LOG(LogTemp, Warning, TEXT(" FIRE AIM AT PLAYER CALLED"));
 		if (AimingComponent->GetFiringState() == EFiringState::Locked) {
 			AimingComponent->Fire();
 		} 

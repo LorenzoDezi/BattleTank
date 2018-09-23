@@ -14,7 +14,6 @@ EBTNodeResult::Type USetSafePosition::ExecuteTask(UBehaviorTreeComponent & Owner
 	UNavigationSystemV1* Nav = UNavigationSystemV1::GetNavigationSystem(tankControllerAI->GetWorld());
 	FVector RandomLocation;
 	Nav->K2_GetRandomReachablePointInRadius(tankControllerAI->GetWorld(), pawn->GetActorLocation(), RandomLocation, DistanceFromActor);
-	UE_LOG(LogTemp, Warning, TEXT("RANDOM WAYPOINT %s"), *(RandomLocation.ToString()));
 	BlackboardComponent->SetValueAsVector(WaypointKey.SelectedKeyName,RandomLocation);
 	return EBTNodeResult::Succeeded;
 }

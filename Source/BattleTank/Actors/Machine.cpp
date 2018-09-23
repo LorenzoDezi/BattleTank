@@ -180,9 +180,10 @@ void AMachine::Disassemble()
 	}
 	//Distruggo l'AI
 	auto controller = GetController();
-	if (controller->IsA<AMachineAIController>())
+	if (controller && controller->IsA<AMachineAIController>()) {
 		Cast<AMachineAIController>(controller)->SetState(EMachineAIState::Dead);
-	if (controller) controller->Destroy();
+		controller->Destroy();
+	}
 	//Distruggo l'attore dopo un tot 
 	FTimerHandle Timer;
 	GetWorldTimerManager().SetTimer(Timer, this, &AMachine::DestroyCall, SecondsToDestroyAfterDeath);

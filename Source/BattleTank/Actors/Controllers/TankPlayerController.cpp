@@ -1,5 +1,6 @@
 #include "Actors/Controllers/TankPlayerController.h"
 #include "Actors/Machine.h"
+#include "BattleTankGameModeBase.h"
 #include "Components/MachineAimingComponent.h"
 #include "Components/TankMovementComponent.h"
 #include "Engine/World.h"
@@ -15,7 +16,7 @@ void ATankPlayerController::BeginPlay()
 	auto movComponent = possessedTank->FindComponentByClass<UTankMovementComponent>();
 	if (!aimingComponent || !movComponent) return;
 	aimingComponent->SetTimeToReload(TimeToReloadInSeconds);
-	FoundComponents(aimingComponent, movComponent);
+	FoundComponents.Broadcast(aimingComponent, movComponent);
 	aimingComponent->SetMaxAmmo(MaxAmmo);
 	EndedSetup();
 }
@@ -31,7 +32,7 @@ void ATankPlayerController::AimAtCrosshair() {
 	auto ControlledTank = GetPawn();
 	if (!ControlledTank) return;
 	auto AimingComponent = ControlledTank->FindComponentByClass<UMachineAimingComponent>();
-	if (!ensure(AimingComponent))
+	if (!AimingComponent)
 		return; 
 	if (GetCrosshairLocation(HitLocation)) {
 		AimingComponent->AimAt(HitLocation);
@@ -76,4 +77,9 @@ void ATankPlayerController::SetPawn(APawn * InPawn)
 void ATankPlayerController::OnTankDeath()
 {
 	StartSpectatingOnly();
+	auto gameMode = GetWorld()->GetAuthGameMode();
+	if (gameMode && gameMode->IsA<ABattleTankGameModeBase>()) {
+		Cast<ABattleTankGameModeBase>(gameMode)->PlayerDefeated();
+		UE_LOG(LogTemp, Warning, TEXT("Player defeated"));
+	}
 }

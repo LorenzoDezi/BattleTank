@@ -29,6 +29,7 @@ void UMachineAimingComponent::BeginPlay()
 	CurrentAmmo = MaxAmmo;
 	if (CurrentAmmo == 0)
 		FiringState = EFiringState::OutOfAmmo;
+	OnFireDelegate.Broadcast();
 }
 
 void UMachineAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)

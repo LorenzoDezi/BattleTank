@@ -46,9 +46,11 @@ public:
 		AActor * DamageCauser
 	) override;
 
+
 private:
 	//Spawn a tank at the mesh socket location
 	AMachine* SpawnTank();
+	void TowerDeath(const FDamageEvent & DamageEvent);
 
 	UDestructibleComponent * DestructibleMesh = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
